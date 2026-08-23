@@ -16,13 +16,13 @@ exports.handler = async (event) => {
     return { statusCode: 200, headers, body: '' };
   }
 
-  const ANTHROPIC_API_KEY = process.env.ANTHROPIC_API_KEY;
+  const OPENAI_API_KEY = process.env.OPENAI_API_KEY;
 
-  if (!ANTHROPIC_API_KEY) {
+  if (!OPENAI_API_KEY) {
     return {
       statusCode: 500,
       headers,
-      body: JSON.stringify({ error: 'ANTHROPIC_API_KEY not configured in environment variables' })
+      body: JSON.stringify({ error: 'OPENAI_API_KEY not configured in environment variables' })
     };
   }
 
@@ -37,15 +37,14 @@ exports.handler = async (event) => {
       };
     }
 
-    const response = await fetch('https://api.anthropic.com/v1/messages', {
+    const response = await fetch('https://api.openai.com/v1/chat/completions', {
       method: 'POST',
       headers: {
         'Content-Type': 'application/json',
-        'x-api-key': ANTHROPIC_API_KEY,
-        'anthropic-version': '2023-06-01'
+        'Authorization': `Bearer ${OPENAI_API_KEY}`
       },
       body: JSON.stringify({
-        model: 'claude-sonnet-4-6',
+        model: 'gpt-4o',
         max_tokens: 4000,
         messages: [
           { role: 'user', content: prompt }
@@ -63,11 +62,8 @@ exports.handler = async (event) => {
       };
     }
 
-    // Extract text from response
-    const articleText = data.content
-      .filter(block => block.type === 'text')
-      .map(block => block.text)
-      .join('\n');
+    // Extract text from OpenAI response
+    const articleText = data.choices[0].message.content;
 
     return {
       statusCode: 200,
