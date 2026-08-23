@@ -887,6 +887,7 @@ body {
     <button class="tab-btn" onclick="switchTab('schedule')">Schedule</button>
     <button class="tab-btn" onclick="switchTab('presidents')">Presidents</button>
     <button class="tab-btn" onclick="switchTab('topics')">Daily Topics</button>
+    <button class="tab-btn" onclick="switchTab('branding')">My Branding</button>
   </div>
 </div>
 
@@ -961,6 +962,60 @@ body {
     <input type="text" placeholder="Search topics..." oninput="filterTopics(this.value)">
   </div>
   <div class="topics-grid" id="topics-grid"></div>
+</div>
+
+<!-- BRANDING TAB -->
+<div class="tab-panel" id="tab-branding">
+  <div class="section-header">
+    <span>My Branding</span>
+    <span class="count">Intro & sign-off for every article</span>
+  </div>
+
+  <div style="display:grid;grid-template-columns:1fr 1fr;gap:20px;">
+    <div style="background:var(--card-bg);border:1px solid var(--border);border-radius:8px;overflow:hidden;">
+      <div style="background:var(--navy);color:var(--cream);padding:12px 16px;font-family:'Playfair Display',serif;font-size:16px;font-weight:600;">
+        Intro Paragraph
+      </div>
+      <div style="padding:16px;">
+        <p style="font-size:13px;color:var(--warm-gray);margin-bottom:10px;">This gets added to the top of every generated article, right after the title. Introduce yourself and set the vibe.</p>
+        <textarea id="branding-intro" rows="8" style="width:100%;font-family:'Source Sans 3',sans-serif;font-size:14px;padding:12px;border:1px solid var(--border);border-radius:6px;resize:vertical;line-height:1.6;" placeholder="Example: Hey there, history nerds! I'm Ally, and welcome back to Ally Loves History..."></textarea>
+        <div style="display:flex;gap:8px;margin-top:10px;">
+          <button class="modal-btn btn-generate" onclick="saveBranding()" style="font-size:13px;padding:8px 16px;">Save</button>
+          <button class="modal-btn btn-copy" onclick="copyBrandingIntro()" style="font-size:13px;padding:8px 16px;">📋 Copy Intro</button>
+        </div>
+      </div>
+    </div>
+
+    <div style="background:var(--card-bg);border:1px solid var(--border);border-radius:8px;overflow:hidden;">
+      <div style="background:var(--burgundy);color:var(--cream);padding:12px 16px;font-family:'Playfair Display',serif;font-size:16px;font-weight:600;">
+        Sign-Off Paragraph
+      </div>
+      <div style="padding:16px;">
+        <p style="font-size:13px;color:var(--warm-gray);margin-bottom:10px;">This gets added to the bottom of every generated article. Your closing, CTA, social links, whatever you want.</p>
+        <textarea id="branding-outro" rows="8" style="width:100%;font-family:'Source Sans 3',sans-serif;font-size:14px;padding:12px;border:1px solid var(--border);border-radius:6px;resize:vertical;line-height:1.6;" placeholder="Example: Thanks for reading! If you liked this, share it with a friend who loves history..."></textarea>
+        <div style="display:flex;gap:8px;margin-top:10px;">
+          <button class="modal-btn btn-generate" onclick="saveBranding()" style="font-size:13px;padding:8px 16px;">Save</button>
+          <button class="modal-btn btn-copy" onclick="copyBrandingOutro()" style="font-size:13px;padding:8px 16px;">📋 Copy Sign-Off</button>
+        </div>
+      </div>
+    </div>
+  </div>
+
+  <div style="background:var(--card-bg);border:1px solid var(--border);border-radius:8px;margin-top:20px;overflow:hidden;">
+    <div style="background:#f8f6f1;padding:12px 16px;font-family:'Playfair Display',serif;font-size:16px;font-weight:600;border-bottom:1px solid var(--border);">
+      Preview: How Your Article Will Look
+    </div>
+    <div style="padding:24px;font-size:14px;line-height:1.7;color:var(--charcoal);" id="branding-preview">
+      <p style="color:var(--warm-gray);font-style:italic;">Save your intro and sign-off above to see a preview here.</p>
+    </div>
+  </div>
+
+  <div style="margin-top:16px;">
+    <label style="display:flex;align-items:center;gap:8px;font-size:14px;cursor:pointer;">
+      <input type="checkbox" id="auto-include-branding" checked onchange="saveBranding()" style="width:16px;height:16px;accent-color:var(--published);">
+      Automatically include intro & sign-off in generated articles
+    </label>
+  </div>
 </div>
 
 </div>
@@ -1481,7 +1536,10 @@ function loadState() {
     publishedTopics: {},
     usedTopics: {},
     customTopics: [],
-    startDate: '2026-08-23' // Daily topics start here, first president Friday is Aug 28
+    startDate: '2026-08-23', // Daily topics start here, first president Friday is Aug 28
+    brandingIntro: '',
+    brandingOutro: '',
+    autoIncludeBranding: true
   };
 }
 
@@ -2120,6 +2178,16 @@ async function generateArticle() {
     }
 
     if (articleText) {
+      // Wrap with branding intro/outro if enabled
+      if (state.autoIncludeBranding !== false) {
+        if (state.brandingIntro) {
+          articleText = articleText.replace(/^(#.+\n)/, '$1\n' + state.brandingIntro + '\n\n');
+        }
+        if (state.brandingOutro) {
+          articleText = articleText.trimEnd() + '\n\n---\n\n' + state.brandingOutro;
+        }
+      }
+
       currentArticleText = articleText;
 
       // Render markdown-ish content as HTML
@@ -2185,6 +2253,97 @@ async function copyArticle() {
 }
 
 // ============================================================
+// BRANDING
+// ============================================================
+
+function saveBranding() {
+  state.brandingIntro = document.getElementById('branding-intro').value;
+  state.brandingOutro = document.getElementById('branding-outro').value;
+  state.autoIncludeBranding = document.getElementById('auto-include-branding').checked;
+  saveState();
+  renderBrandingPreview();
+
+  // Quick save confirmation
+  const btns = document.querySelectorAll('#tab-branding .btn-generate');
+  btns.forEach(btn => {
+    btn.textContent = '✅ Saved!';
+    setTimeout(() => { btn.textContent = 'Save'; }, 1500);
+  });
+}
+
+function loadBranding() {
+  document.getElementById('branding-intro').value = state.brandingIntro || '';
+  document.getElementById('branding-outro').value = state.brandingOutro || '';
+  document.getElementById('auto-include-branding').checked = state.autoIncludeBranding !== false;
+  renderBrandingPreview();
+}
+
+function renderBrandingPreview() {
+  const intro = state.brandingIntro || '';
+  const outro = state.brandingOutro || '';
+  const preview = document.getElementById('branding-preview');
+
+  if (!intro && !outro) {
+    preview.innerHTML = '<p style="color:var(--warm-gray);font-style:italic;">Save your intro and sign-off above to see a preview here.</p>';
+    return;
+  }
+
+  let html = '';
+  html += '<div style="color:var(--warm-gray);font-size:12px;text-transform:uppercase;letter-spacing:1px;margin-bottom:8px;">TITLE GOES HERE</div>';
+  if (intro) {
+    html += '<div style="background:#f0f7f0;border-left:3px solid var(--sage);padding:12px 16px;margin-bottom:16px;border-radius:0 6px 6px 0;">';
+    html += '<div style="font-size:10px;color:var(--sage);font-weight:600;text-transform:uppercase;letter-spacing:1px;margin-bottom:4px;">YOUR INTRO</div>';
+    html += intro.replace(/\n/g, '<br>');
+    html += '</div>';
+  }
+  html += '<div style="color:var(--warm-gray);font-style:italic;padding:20px 0;text-align:center;border-top:1px dashed var(--border);border-bottom:1px dashed var(--border);">[ AI-generated article content goes here ]</div>';
+  if (outro) {
+    html += '<div style="background:#f5f0f2;border-left:3px solid var(--burgundy);padding:12px 16px;margin-top:16px;border-radius:0 6px 6px 0;">';
+    html += '<div style="font-size:10px;color:var(--burgundy);font-weight:600;text-transform:uppercase;letter-spacing:1px;margin-bottom:4px;">YOUR SIGN-OFF</div>';
+    html += outro.replace(/\n/g, '<br>');
+    html += '</div>';
+  }
+
+  preview.innerHTML = html;
+}
+
+async function copyBrandingIntro() {
+  const text = document.getElementById('branding-intro').value;
+  if (!text) return;
+  try {
+    await navigator.clipboard.writeText(text);
+  } catch(e) {
+    const ta = document.createElement('textarea');
+    ta.value = text;
+    document.body.appendChild(ta);
+    ta.select();
+    document.execCommand('copy');
+    document.body.removeChild(ta);
+  }
+  const btns = document.querySelectorAll('#tab-branding .btn-copy');
+  btns[0].innerHTML = '✅ Copied!';
+  setTimeout(() => { btns[0].innerHTML = '📋 Copy Intro'; }, 1500);
+}
+
+async function copyBrandingOutro() {
+  const text = document.getElementById('branding-outro').value;
+  if (!text) return;
+  try {
+    await navigator.clipboard.writeText(text);
+  } catch(e) {
+    const ta = document.createElement('textarea');
+    ta.value = text;
+    document.body.appendChild(ta);
+    ta.select();
+    document.execCommand('copy');
+    document.body.removeChild(ta);
+  }
+  const btns = document.querySelectorAll('#tab-branding .btn-copy');
+  btns[1].innerHTML = '✅ Copied!';
+  setTimeout(() => { btns[1].innerHTML = '📋 Copy Sign-Off'; }, 1500);
+}
+
+// ============================================================
 // INIT
 // ============================================================
 
@@ -2192,6 +2351,7 @@ function init() {
   updateStats();
   updateProgress();
   renderCalendar();
+  loadBranding();
 }
 
 init();
