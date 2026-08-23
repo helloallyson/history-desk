@@ -1,0 +1,2200 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>The History Desk | Substack Planner</title>
+<link href="https://fonts.googleapis.com/css2?family=Playfair+Display:wght@400;600;700;900&family=Source+Sans+3:wght@300;400;500;600&family=JetBrains+Mono:wght@400;500&display=swap" rel="stylesheet">
+<style>
+:root {
+  --navy: #1B2A4A;
+  --gold: #C4A35A;
+  --gold-light: #E8D5A3;
+  --cream: #FAF7F0;
+  --burgundy: #6B2D3E;
+  --sage: #5C7A5E;
+  --sage-light: #A8C4A0;
+  --charcoal: #2C2C2C;
+  --warm-gray: #8A8478;
+  --border: #D6CFC2;
+  --card-bg: #FFFFFF;
+  --friday-bg: #EDE7F6;
+  --friday-accent: #5E35B1;
+  --monday-bg: #FCE4EC;
+  --monday-accent: #C2185B;
+  --daily-bg: #E8F5E9;
+  --daily-accent: #2E7D32;
+  --published: #4CAF50;
+  --draft: #FF9800;
+}
+
+* { margin: 0; padding: 0; box-sizing: border-box; }
+
+body {
+  font-family: 'Source Sans 3', sans-serif;
+  background: var(--cream);
+  color: var(--charcoal);
+  line-height: 1.5;
+}
+
+.masthead {
+  background: var(--navy);
+  color: var(--cream);
+  padding: 28px 32px 20px;
+  border-bottom: 4px solid var(--gold);
+}
+
+.masthead-inner {
+  max-width: 1400px;
+  margin: 0 auto;
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  flex-wrap: wrap;
+  gap: 16px;
+}
+
+.masthead h1 {
+  font-family: 'Playfair Display', serif;
+  font-weight: 900;
+  font-size: 28px;
+  letter-spacing: 0.5px;
+}
+
+.masthead h1 span {
+  color: var(--gold);
+  font-weight: 400;
+  font-style: italic;
+}
+
+.masthead-stats {
+  display: flex;
+  gap: 24px;
+  font-size: 13px;
+  opacity: 0.85;
+}
+
+.masthead-stats strong {
+  color: var(--gold-light);
+  font-size: 18px;
+  display: block;
+}
+
+/* Progress bar */
+.progress-strip {
+  background: var(--navy);
+  padding: 0 32px 16px;
+}
+
+.progress-strip-inner {
+  max-width: 1400px;
+  margin: 0 auto;
+}
+
+.progress-bar-container {
+  display: flex;
+  align-items: center;
+  gap: 12px;
+  font-size: 12px;
+  color: var(--gold-light);
+}
+
+.progress-bar {
+  flex: 1;
+  height: 8px;
+  background: rgba(255,255,255,0.1);
+  border-radius: 4px;
+  overflow: hidden;
+}
+
+.progress-fill {
+  height: 100%;
+  background: linear-gradient(90deg, var(--gold), var(--gold-light));
+  border-radius: 4px;
+  transition: width 0.5s ease;
+}
+
+/* Tabs */
+.tab-bar {
+  background: var(--card-bg);
+  border-bottom: 1px solid var(--border);
+  padding: 0 32px;
+  position: sticky;
+  top: 0;
+  z-index: 100;
+}
+
+.tab-bar-inner {
+  max-width: 1400px;
+  margin: 0 auto;
+  display: flex;
+  gap: 0;
+}
+
+.tab-btn {
+  font-family: 'Source Sans 3', sans-serif;
+  font-size: 14px;
+  font-weight: 500;
+  padding: 14px 20px;
+  border: none;
+  background: none;
+  cursor: pointer;
+  color: var(--warm-gray);
+  border-bottom: 3px solid transparent;
+  transition: all 0.2s;
+}
+
+.tab-btn:hover { color: var(--charcoal); }
+
+.tab-btn.active {
+  color: var(--navy);
+  border-bottom-color: var(--gold);
+  font-weight: 600;
+}
+
+/* Main content */
+.main {
+  max-width: 1400px;
+  margin: 0 auto;
+  padding: 24px 32px;
+}
+
+.tab-panel { display: none; }
+.tab-panel.active { display: block; }
+
+/* Calendar view */
+.calendar-controls {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  margin-bottom: 20px;
+  flex-wrap: wrap;
+  gap: 12px;
+}
+
+.calendar-nav {
+  display: flex;
+  align-items: center;
+  gap: 12px;
+}
+
+.calendar-nav h2 {
+  font-family: 'Playfair Display', serif;
+  font-size: 22px;
+  min-width: 200px;
+  text-align: center;
+}
+
+.cal-btn {
+  background: var(--navy);
+  color: white;
+  border: none;
+  width: 32px;
+  height: 32px;
+  border-radius: 6px;
+  cursor: pointer;
+  font-size: 16px;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+}
+
+.cal-btn:hover { background: var(--burgundy); }
+
+.calendar-legend {
+  display: flex;
+  gap: 16px;
+  font-size: 12px;
+}
+
+.legend-dot {
+  width: 10px;
+  height: 10px;
+  border-radius: 50%;
+  display: inline-block;
+  margin-right: 4px;
+  vertical-align: middle;
+}
+
+.calendar-grid {
+  display: grid;
+  grid-template-columns: repeat(7, 1fr);
+  gap: 2px;
+  background: var(--border);
+  border: 1px solid var(--border);
+  border-radius: 8px;
+  overflow: hidden;
+}
+
+.cal-header {
+  background: var(--navy);
+  color: var(--cream);
+  padding: 8px;
+  text-align: center;
+  font-size: 12px;
+  font-weight: 600;
+  text-transform: uppercase;
+  letter-spacing: 1px;
+}
+
+.cal-day {
+  background: var(--card-bg);
+  min-height: 100px;
+  padding: 6px;
+  position: relative;
+  font-size: 12px;
+}
+
+.cal-day.empty { background: #f5f3ee; }
+.cal-day.today { box-shadow: inset 0 0 0 2px var(--gold); }
+
+.cal-date {
+  font-weight: 600;
+  font-size: 13px;
+  margin-bottom: 4px;
+  color: var(--warm-gray);
+}
+
+.cal-post {
+  padding: 3px 5px;
+  border-radius: 4px;
+  font-size: 11px;
+  margin-bottom: 2px;
+  line-height: 1.3;
+  cursor: pointer;
+  white-space: nowrap;
+  overflow: hidden;
+  text-overflow: ellipsis;
+}
+
+.cal-post.friday { background: var(--friday-bg); color: var(--friday-accent); border-left: 3px solid var(--friday-accent); }
+.cal-post.monday { background: var(--monday-bg); color: var(--monday-accent); border-left: 3px solid var(--monday-accent); }
+.cal-post.daily { background: var(--daily-bg); color: var(--daily-accent); border-left: 3px solid var(--daily-accent); }
+.cal-post.published { opacity: 0.5; text-decoration: line-through; }
+
+/* Presidential tracker */
+.pres-grid {
+  display: grid;
+  grid-template-columns: repeat(auto-fill, minmax(420px, 1fr));
+  gap: 16px;
+}
+
+.pres-card {
+  background: var(--card-bg);
+  border: 1px solid var(--border);
+  border-radius: 8px;
+  overflow: hidden;
+  transition: box-shadow 0.2s;
+}
+
+.pres-card:hover { box-shadow: 0 4px 12px rgba(0,0,0,0.08); }
+.pres-card.completed { opacity: 0.5; }
+
+.pres-card-header {
+  padding: 14px 16px;
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  border-bottom: 1px solid var(--border);
+}
+
+.pres-number {
+  font-family: 'JetBrains Mono', monospace;
+  font-size: 12px;
+  background: var(--navy);
+  color: var(--gold);
+  padding: 2px 8px;
+  border-radius: 4px;
+  font-weight: 500;
+}
+
+.pres-name {
+  font-family: 'Playfair Display', serif;
+  font-size: 17px;
+  font-weight: 700;
+  flex: 1;
+  margin-left: 12px;
+}
+
+.pres-years {
+  font-size: 12px;
+  color: var(--warm-gray);
+  font-family: 'JetBrains Mono', monospace;
+}
+
+.pres-card-body { padding: 14px 16px; }
+
+.pres-row {
+  display: flex;
+  align-items: center;
+  gap: 10px;
+  padding: 8px 0;
+  border-bottom: 1px solid #f0ece4;
+}
+
+.pres-row:last-child { border-bottom: none; }
+
+.pres-row input[type="checkbox"] {
+  width: 18px;
+  height: 18px;
+  accent-color: var(--published);
+  cursor: pointer;
+}
+
+.pres-row-type {
+  font-size: 10px;
+  font-weight: 600;
+  text-transform: uppercase;
+  letter-spacing: 1px;
+  padding: 2px 8px;
+  border-radius: 3px;
+  min-width: 60px;
+  text-align: center;
+}
+
+.pres-row-type.friday { background: var(--friday-bg); color: var(--friday-accent); }
+.pres-row-type.monday { background: var(--monday-bg); color: var(--monday-accent); }
+
+.pres-row-title {
+  flex: 1;
+  font-size: 14px;
+}
+
+.pres-row-date {
+  font-size: 12px;
+  color: var(--warm-gray);
+  font-family: 'JetBrains Mono', monospace;
+}
+
+.pres-card-notes {
+  font-size: 12px;
+  color: var(--warm-gray);
+  font-style: italic;
+  padding: 8px 16px 14px;
+  border-top: 1px solid #f0ece4;
+}
+
+/* Daily topics */
+.topics-header {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  margin-bottom: 20px;
+  flex-wrap: wrap;
+  gap: 12px;
+}
+
+.topics-header h2 {
+  font-family: 'Playfair Display', serif;
+  font-size: 22px;
+}
+
+.topic-filters {
+  display: flex;
+  gap: 6px;
+  flex-wrap: wrap;
+}
+
+.filter-btn {
+  font-family: 'Source Sans 3', sans-serif;
+  font-size: 12px;
+  padding: 5px 12px;
+  border: 1px solid var(--border);
+  border-radius: 20px;
+  background: var(--card-bg);
+  cursor: pointer;
+  transition: all 0.2s;
+}
+
+.filter-btn:hover, .filter-btn.active {
+  background: var(--navy);
+  color: white;
+  border-color: var(--navy);
+}
+
+.topics-grid {
+  display: grid;
+  grid-template-columns: repeat(auto-fill, minmax(300px, 1fr));
+  gap: 12px;
+}
+
+.topic-card {
+  background: var(--card-bg);
+  border: 1px solid var(--border);
+  border-radius: 8px;
+  padding: 14px 16px;
+  transition: box-shadow 0.2s;
+  cursor: pointer;
+}
+
+.topic-card:hover { box-shadow: 0 3px 10px rgba(0,0,0,0.06); }
+.topic-card.used { opacity: 0.4; }
+
+.topic-category {
+  font-size: 10px;
+  font-weight: 600;
+  text-transform: uppercase;
+  letter-spacing: 1px;
+  padding: 2px 8px;
+  border-radius: 3px;
+  display: inline-block;
+  margin-bottom: 6px;
+}
+
+.cat-wars { background: #FFEBEE; color: #C62828; }
+.cat-founding { background: #E3F2FD; color: #1565C0; }
+.cat-inventions { background: #FFF3E0; color: #E65100; }
+.cat-culture { background: #F3E5F5; color: #6A1B9A; }
+.cat-civil-rights { background: #E8F5E9; color: #2E7D32; }
+.cat-westward { background: #FBE9E7; color: #BF360C; }
+.cat-presidents { background: var(--friday-bg); color: var(--friday-accent); }
+.cat-women { background: var(--monday-bg); color: var(--monday-accent); }
+.cat-oddities { background: #FFFDE7; color: #F57F17; }
+.cat-disasters { background: #ECEFF1; color: #37474F; }
+.cat-science { background: #E0F7FA; color: #00695C; }
+.cat-economy { background: #F1F8E9; color: #558B2F; }
+.cat-crime { background: #FCE4EC; color: #880E4F; }
+.cat-sports { background: #E8EAF6; color: #283593; }
+.cat-holidays { background: #FFF8E1; color: #FF6F00; }
+.cat-food { background: #EFEBE9; color: #4E342E; }
+
+.topic-title {
+  font-family: 'Playfair Display', serif;
+  font-size: 15px;
+  font-weight: 600;
+  margin-bottom: 4px;
+}
+
+.topic-desc {
+  font-size: 13px;
+  color: var(--warm-gray);
+  line-height: 1.4;
+}
+
+.topic-card-footer {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  margin-top: 8px;
+}
+
+.mark-used-btn {
+  font-family: 'Source Sans 3', sans-serif;
+  font-size: 11px;
+  padding: 3px 10px;
+  border: 1px solid var(--border);
+  border-radius: 4px;
+  background: white;
+  cursor: pointer;
+  color: var(--warm-gray);
+}
+
+.mark-used-btn:hover { background: var(--published); color: white; border-color: var(--published); }
+
+/* Schedule tab */
+.schedule-list {
+  display: flex;
+  flex-direction: column;
+  gap: 8px;
+}
+
+.schedule-week {
+  background: var(--card-bg);
+  border: 1px solid var(--border);
+  border-radius: 8px;
+  overflow: hidden;
+}
+
+.schedule-week-header {
+  padding: 10px 16px;
+  background: #f8f6f1;
+  font-family: 'JetBrains Mono', monospace;
+  font-size: 12px;
+  color: var(--warm-gray);
+  font-weight: 500;
+  border-bottom: 1px solid var(--border);
+}
+
+.schedule-row {
+  display: flex;
+  align-items: center;
+  padding: 10px 16px;
+  gap: 12px;
+  border-bottom: 1px solid #f5f3ee;
+}
+
+.schedule-row:last-child { border-bottom: none; }
+
+.schedule-row input[type="checkbox"] {
+  width: 16px;
+  height: 16px;
+  accent-color: var(--published);
+  cursor: pointer;
+}
+
+.schedule-day {
+  font-family: 'JetBrains Mono', monospace;
+  font-size: 11px;
+  width: 80px;
+  color: var(--warm-gray);
+}
+
+.schedule-type {
+  font-size: 10px;
+  font-weight: 600;
+  text-transform: uppercase;
+  letter-spacing: 0.5px;
+  padding: 2px 8px;
+  border-radius: 3px;
+  min-width: 50px;
+  text-align: center;
+}
+
+.schedule-type.friday { background: var(--friday-bg); color: var(--friday-accent); }
+.schedule-type.monday { background: var(--monday-bg); color: var(--monday-accent); }
+.schedule-type.daily { background: var(--daily-bg); color: var(--daily-accent); }
+
+.schedule-title {
+  flex: 1;
+  font-size: 14px;
+}
+
+.schedule-row.done .schedule-title { text-decoration: line-through; opacity: 0.5; }
+
+/* Quick add */
+.quick-add {
+  background: var(--card-bg);
+  border: 1px solid var(--border);
+  border-radius: 8px;
+  padding: 16px;
+  margin-bottom: 20px;
+  display: flex;
+  gap: 10px;
+  flex-wrap: wrap;
+}
+
+.quick-add input, .quick-add select {
+  font-family: 'Source Sans 3', sans-serif;
+  font-size: 14px;
+  padding: 8px 12px;
+  border: 1px solid var(--border);
+  border-radius: 6px;
+  background: white;
+}
+
+.quick-add input { flex: 1; min-width: 200px; }
+
+.quick-add button {
+  font-family: 'Source Sans 3', sans-serif;
+  font-size: 14px;
+  padding: 8px 20px;
+  background: var(--sage);
+  color: white;
+  border: none;
+  border-radius: 6px;
+  cursor: pointer;
+  font-weight: 500;
+}
+
+.quick-add button:hover { background: var(--navy); }
+
+/* Section headers */
+.section-header {
+  font-family: 'Playfair Display', serif;
+  font-size: 22px;
+  margin-bottom: 16px;
+  padding-bottom: 8px;
+  border-bottom: 2px solid var(--gold);
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+}
+
+.section-header .count {
+  font-family: 'JetBrains Mono', monospace;
+  font-size: 13px;
+  color: var(--warm-gray);
+  font-weight: 400;
+}
+
+/* Search */
+.search-box {
+  margin-bottom: 16px;
+}
+
+.search-box input {
+  width: 100%;
+  max-width: 400px;
+  font-family: 'Source Sans 3', sans-serif;
+  font-size: 14px;
+  padding: 10px 14px;
+  border: 1px solid var(--border);
+  border-radius: 6px;
+  background: white;
+}
+
+/* Responsive */
+@media (max-width: 768px) {
+  .masthead { padding: 16px; }
+  .masthead h1 { font-size: 20px; }
+  .main { padding: 16px; }
+  .tab-bar { padding: 0 16px; }
+  .tab-btn { padding: 10px 12px; font-size: 12px; }
+  .pres-grid { grid-template-columns: 1fr; }
+  .topics-grid { grid-template-columns: 1fr; }
+  .cal-day { min-height: 70px; }
+  .cal-post { font-size: 9px; }
+  .progress-strip { padding: 0 16px 12px; }
+}
+
+/* Article Modal */
+.modal-overlay {
+  display: none;
+  position: fixed;
+  top: 0; left: 0; right: 0; bottom: 0;
+  background: rgba(0,0,0,0.6);
+  z-index: 1000;
+  padding: 20px;
+  overflow-y: auto;
+}
+
+.modal-overlay.open { display: flex; align-items: flex-start; justify-content: center; }
+
+.modal {
+  background: var(--cream);
+  border-radius: 12px;
+  width: 100%;
+  max-width: 800px;
+  margin-top: 40px;
+  margin-bottom: 40px;
+  box-shadow: 0 20px 60px rgba(0,0,0,0.3);
+  overflow: hidden;
+}
+
+.modal-header {
+  background: var(--navy);
+  color: var(--cream);
+  padding: 20px 24px;
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+}
+
+.modal-header h2 {
+  font-family: 'Playfair Display', serif;
+  font-size: 20px;
+  font-weight: 700;
+}
+
+.modal-type-badge {
+  font-size: 10px;
+  font-weight: 600;
+  text-transform: uppercase;
+  letter-spacing: 1px;
+  padding: 3px 10px;
+  border-radius: 4px;
+  margin-right: 12px;
+}
+
+.modal-type-badge.friday { background: var(--friday-bg); color: var(--friday-accent); }
+.modal-type-badge.monday { background: var(--monday-bg); color: var(--monday-accent); }
+.modal-type-badge.daily { background: var(--daily-bg); color: var(--daily-accent); }
+
+.modal-close {
+  background: none;
+  border: none;
+  color: var(--cream);
+  font-size: 24px;
+  cursor: pointer;
+  padding: 0 4px;
+  opacity: 0.7;
+}
+
+.modal-close:hover { opacity: 1; }
+
+.modal-body { padding: 24px; }
+
+.modal-meta {
+  font-size: 13px;
+  color: var(--warm-gray);
+  margin-bottom: 16px;
+  padding-bottom: 12px;
+  border-bottom: 1px solid var(--border);
+}
+
+.modal-notes {
+  background: #f8f6f1;
+  border: 1px solid var(--border);
+  border-radius: 8px;
+  padding: 14px;
+  margin-bottom: 16px;
+  font-size: 13px;
+  color: var(--charcoal);
+  line-height: 1.5;
+}
+
+.modal-notes strong { color: var(--navy); }
+
+.modal-actions {
+  display: flex;
+  gap: 10px;
+  margin-bottom: 20px;
+  flex-wrap: wrap;
+}
+
+.modal-btn {
+  font-family: 'Source Sans 3', sans-serif;
+  font-size: 14px;
+  font-weight: 500;
+  padding: 10px 20px;
+  border: none;
+  border-radius: 6px;
+  cursor: pointer;
+  display: flex;
+  align-items: center;
+  gap: 6px;
+  transition: all 0.2s;
+}
+
+.btn-generate {
+  background: var(--navy);
+  color: white;
+}
+
+.btn-generate:hover { background: var(--burgundy); }
+.btn-generate:disabled { background: #999; cursor: not-allowed; }
+
+.btn-copy {
+  background: var(--sage);
+  color: white;
+}
+
+.btn-copy:hover { background: #4a6a4c; }
+.btn-copy.copied { background: var(--published); }
+
+.btn-outline {
+  background: white;
+  color: var(--charcoal);
+  border: 1px solid var(--border);
+}
+
+.btn-outline:hover { background: #f5f3ee; }
+
+.article-output {
+  background: white;
+  border: 1px solid var(--border);
+  border-radius: 8px;
+  padding: 24px;
+  font-size: 15px;
+  line-height: 1.7;
+  color: var(--charcoal);
+  display: none;
+  white-space: pre-wrap;
+  font-family: 'Source Sans 3', sans-serif;
+}
+
+.article-output.visible { display: block; }
+
+.article-output h1, .article-output h2, .article-output h3 {
+  font-family: 'Playfair Display', serif;
+  color: var(--navy);
+  margin: 20px 0 8px;
+}
+
+.article-output h1 { font-size: 24px; }
+.article-output h2 { font-size: 20px; }
+
+.generating-indicator {
+  display: none;
+  padding: 40px;
+  text-align: center;
+  color: var(--warm-gray);
+}
+
+.generating-indicator.visible { display: block; }
+
+.generating-dots {
+  display: inline-block;
+  font-size: 24px;
+  letter-spacing: 4px;
+  animation: dots 1.5s infinite;
+}
+
+@keyframes dots {
+  0%, 20% { content: '.'; opacity: 0.3; }
+  40% { opacity: 1; }
+  60% { opacity: 0.3; }
+  80%, 100% { opacity: 0.3; }
+}
+
+.tone-selector {
+  display: flex;
+  gap: 6px;
+  margin-bottom: 16px;
+  flex-wrap: wrap;
+}
+
+.tone-btn {
+  font-family: 'Source Sans 3', sans-serif;
+  font-size: 12px;
+  padding: 5px 12px;
+  border: 1px solid var(--border);
+  border-radius: 20px;
+  background: white;
+  cursor: pointer;
+  transition: all 0.2s;
+}
+
+.tone-btn:hover, .tone-btn.active {
+  background: var(--navy);
+  color: white;
+  border-color: var(--navy);
+}
+
+.length-note {
+  font-size: 12px;
+  color: var(--warm-gray);
+  margin-bottom: 8px;
+}
+</style>
+</head>
+<body>
+
+<div class="masthead">
+  <div class="masthead-inner">
+    <h1>The History Desk <span>Substack Planner</span></h1>
+    <div class="masthead-stats">
+      <div><strong id="stat-published">0</strong> Published</div>
+      <div><strong id="stat-upcoming">0</strong> Upcoming</div>
+      <div><strong id="stat-topics">0</strong> Topic Ideas</div>
+    </div>
+  </div>
+</div>
+
+<div class="progress-strip">
+  <div class="progress-strip-inner">
+    <div class="progress-bar-container">
+      <span>Presidential Series Progress</span>
+      <div class="progress-bar"><div class="progress-fill" id="pres-progress" style="width:4%"></div></div>
+      <span id="pres-progress-text">2 / 46</span>
+    </div>
+  </div>
+</div>
+
+<div class="tab-bar">
+  <div class="tab-bar-inner">
+    <button class="tab-btn active" onclick="switchTab('calendar')">Calendar</button>
+    <button class="tab-btn" onclick="switchTab('schedule')">Schedule</button>
+    <button class="tab-btn" onclick="switchTab('presidents')">Presidents</button>
+    <button class="tab-btn" onclick="switchTab('topics')">Daily Topics</button>
+  </div>
+</div>
+
+<div class="main">
+
+<!-- CALENDAR TAB -->
+<div class="tab-panel active" id="tab-calendar">
+  <div class="calendar-controls">
+    <div class="calendar-nav">
+      <button class="cal-btn" onclick="changeMonth(-1)">&larr;</button>
+      <h2 id="cal-month-label"></h2>
+      <button class="cal-btn" onclick="changeMonth(1)">&rarr;</button>
+    </div>
+    <div class="calendar-legend">
+      <span><span class="legend-dot" style="background:var(--friday-accent)"></span> President (Fri)</span>
+      <span><span class="legend-dot" style="background:var(--monday-accent)"></span> Wife (Mon)</span>
+      <span><span class="legend-dot" style="background:var(--daily-accent)"></span> Daily</span>
+    </div>
+  </div>
+  <div class="calendar-grid" id="calendar-grid"></div>
+</div>
+
+<!-- SCHEDULE TAB -->
+<div class="tab-panel" id="tab-schedule">
+  <div class="section-header">
+    <span>Posting Schedule</span>
+    <span class="count" id="schedule-range"></span>
+  </div>
+  <div class="quick-add">
+    <input type="text" id="custom-topic" placeholder="Add a custom daily topic...">
+    <input type="date" id="custom-date">
+    <select id="custom-cat">
+      <option value="wars">Wars & Battles</option>
+      <option value="founding">Founding Era</option>
+      <option value="inventions">Inventions</option>
+      <option value="culture">Culture</option>
+      <option value="civil-rights">Civil Rights</option>
+      <option value="westward">Westward Expansion</option>
+      <option value="oddities">Oddities</option>
+      <option value="disasters">Disasters</option>
+      <option value="science">Science</option>
+      <option value="economy">Economy</option>
+      <option value="crime">Crime</option>
+      <option value="sports">Sports History</option>
+      <option value="holidays">Holidays & Traditions</option>
+      <option value="food">Food History</option>
+    </select>
+    <button onclick="addCustomTopic()">+ Add</button>
+  </div>
+  <div class="schedule-list" id="schedule-list"></div>
+</div>
+
+<!-- PRESIDENTS TAB -->
+<div class="tab-panel" id="tab-presidents">
+  <div class="section-header">
+    <span>Presidential Series Tracker</span>
+    <span class="count">46 Presidents + First Ladies</span>
+  </div>
+  <div class="search-box">
+    <input type="text" placeholder="Search presidents..." oninput="filterPresidents(this.value)">
+  </div>
+  <div class="pres-grid" id="pres-grid"></div>
+</div>
+
+<!-- DAILY TOPICS TAB -->
+<div class="tab-panel" id="tab-topics">
+  <div class="topics-header">
+    <h2>Daily Topic Ideas Bank</h2>
+    <div class="topic-filters" id="topic-filters"></div>
+  </div>
+  <div class="search-box">
+    <input type="text" placeholder="Search topics..." oninput="filterTopics(this.value)">
+  </div>
+  <div class="topics-grid" id="topics-grid"></div>
+</div>
+
+</div>
+
+<!-- ARTICLE MODAL -->
+<div class="modal-overlay" id="article-modal" onclick="if(event.target===this)closeModal()">
+  <div class="modal">
+    <div class="modal-header">
+      <div style="display:flex;align-items:center;">
+        <span class="modal-type-badge" id="modal-badge">FRI</span>
+        <h2 id="modal-title">Article Title</h2>
+      </div>
+      <button class="modal-close" onclick="closeModal()">&times;</button>
+    </div>
+    <div class="modal-body">
+      <div class="modal-meta" id="modal-meta"></div>
+      <div class="modal-notes" id="modal-notes"></div>
+
+      <div class="length-note">Article style:</div>
+      <div class="tone-selector">
+        <button class="tone-btn active" onclick="setTone('conversational', this)">Conversational & Fun</button>
+        <button class="tone-btn" onclick="setTone('storytelling', this)">Storytelling</button>
+        <button class="tone-btn" onclick="setTone('listicle', this)">Listicle Style</button>
+        <button class="tone-btn" onclick="setTone('deep-dive', this)">Deep Dive</button>
+      </div>
+
+      <div class="modal-actions">
+        <button class="modal-btn btn-generate" id="btn-generate" onclick="generateArticle()">
+          ✨ Generate Article
+        </button>
+        <button class="modal-btn btn-copy" id="btn-copy" onclick="copyArticle()" style="display:none;">
+          📋 Copy Article
+        </button>
+        <button class="modal-btn btn-outline" id="btn-regen" onclick="generateArticle()" style="display:none;">
+          🔄 Regenerate
+        </button>
+      </div>
+
+      <div class="generating-indicator" id="generating">
+        <div>Writing your article<span class="generating-dots" id="loading-dots">...</span></div>
+        <div style="margin-top:8px;font-size:13px;">This takes about 15-30 seconds</div>
+      </div>
+
+      <div class="article-output" id="article-output"></div>
+    </div>
+  </div>
+</div>
+
+<script>// ============================================================
+// DATA
+// ============================================================
+
+const PRESIDENTS = [
+  { num: 1, name: "George Washington", years: "1789-1797", wife: "Martha Washington", wifeNote: "Set the tone for every First Lady after her", presNote: "The one who started it all. Could've been king, chose president." },
+  { num: 2, name: "John Adams", years: "1797-1801", wife: "Abigail Adams", wifeNote: "Political advisor, prolific letter writer, feminist before feminism", presNote: "First to live in the White House. Lost to Jefferson. Salty about it." },
+  { num: 3, name: "Thomas Jefferson", years: "1801-1809", wife: "Martha Wayles Skelton Jefferson", wifeNote: "Died 19 years before his presidency. Dolley Madison often served as hostess. Cover the complex legacy including Sally Hemings.", presNote: "Declaration of Independence, Louisiana Purchase, contradictions galore." },
+  { num: 4, name: "James Madison", years: "1809-1817", wife: "Dolley Madison", wifeNote: "Saved the Washington portrait when the British burned the White House. Social butterfly. Ice cream pioneer.", presNote: "Father of the Constitution. Tiny king (5'4\"). War of 1812." },
+  { num: 5, name: "James Monroe", years: "1817-1825", wife: "Elizabeth Monroe", wifeNote: "Called 'la belle Americaine' in France. Controversial for being too formal after Dolley.", presNote: "Monroe Doctrine. Era of Good Feelings. Last Founding Father president." },
+  { num: 6, name: "John Quincy Adams", years: "1825-1829", wife: "Louisa Catherine Adams", wifeNote: "Only foreign-born First Lady (London). Struggled with depression. Wrote a memoir.", presNote: "Son of a president. Lost popular vote, won House vote. Went back to Congress after." },
+  { num: 7, name: "Andrew Jackson", years: "1829-1837", wife: "Rachel Jackson", wifeNote: "Died weeks before inauguration. The scandal around her divorce literally killed her (stress). Tragic story.", presNote: "Trail of Tears. Populist. Killed the national bank. Had a parrot that swore." },
+  { num: 8, name: "Martin Van Buren", years: "1837-1841", wife: "Hannah Van Buren", wifeNote: "Died 18 years before his presidency. He never remarried. Angelica Singleton Van Buren (daughter-in-law) served as hostess.", presNote: "First president born a US citizen. Panic of 1837 destroyed his rep. Origin of 'OK.'" },
+  { num: 9, name: "William Henry Harrison", years: "1841", wife: "Anna Harrison", wifeNote: "Never made it to DC as First Lady... he died 31 days in. She was the first president's wife to receive formal education.", presNote: "Longest inauguration speech. Shortest presidency. 31 days. Pneumonia." },
+  { num: 10, name: "John Tyler", years: "1841-1845", wife: "Letitia Tyler / Julia Tyler", wifeNote: "TWO First Ladies. Letitia died in office (first to do so). Julia was 30 years younger. Started 'Hail to the Chief.'", presNote: "His Accidency. Expelled from his own party. Had 15 kids." },
+  { num: 11, name: "James K. Polk", years: "1845-1849", wife: "Sarah Polk", wifeNote: "Banned dancing and hard liquor in the White House. Co-managed his career. Smart as a whip.", presNote: "Manifest Destiny guy. Got Oregon, California, Texas. Did everything in one term, died 3 months later." },
+  { num: 12, name: "Zachary Taylor", years: "1849-1850", wife: "Margaret Taylor", wifeNote: "Hated politics. Refused to sit for portraits. Prayed he'd lose the election. Ghost First Lady.", presNote: "Old Rough and Ready. Never voted before becoming president. Died from cherries and milk (maybe)." },
+  { num: 13, name: "Millard Fillmore", years: "1850-1853", wife: "Abigail Fillmore", wifeNote: "Former schoolteacher. Started the White House library. Died shortly after leaving.", presNote: "Last Whig president. Compromised on slavery. Forgettable but consequential." },
+  { num: 14, name: "Franklin Pierce", years: "1853-1857", wife: "Jane Pierce", wifeNote: "Called 'the shadow in the White House.' Their son died in a train accident weeks before inauguration. Devastatingly sad story.", presNote: "Handsome disaster. Saw his son die. Drank. Lost his party's support." },
+  { num: 15, name: "James Buchanan", years: "1857-1861", wife: null, wifeNote: "Only bachelor president. His niece Harriet Lane served as First Lady and was wildly popular.", presNote: "Consistently ranked worst president. Let the country slide into Civil War. Bachelor." },
+  { num: 16, name: "Abraham Lincoln", years: "1861-1865", wife: "Mary Todd Lincoln", wifeNote: "Controversial, overspent, lost children, possibly bipolar, committed to asylum after his assassination. Fascinating and tragic.", presNote: "Emancipation Proclamation. Civil War. Assassination at Ford's Theatre." },
+  { num: 17, name: "Andrew Johnson", years: "1865-1869", wife: "Eliza Johnson", wifeNote: "Taught him to read and write. Was sick during most of the presidency. Rarely appeared publicly.", presNote: "First president impeached. Vetoed civil rights bills. Lincoln's worst decision." },
+  { num: 18, name: "Ulysses S. Grant", years: "1869-1877", wife: "Julia Grant", wifeNote: "Had a condition called strabismus (crossed eyes), refused surgery because Grant fell in love with her that way. Wrote a memoir.", presNote: "Civil War hero turned scandal-plagued president. Wrote his memoirs while dying of cancer." },
+  { num: 19, name: "Rutherford B. Hayes", years: "1877-1881", wife: "Lucy Hayes", wifeNote: "First First Lady with a college degree. Called 'Lemonade Lucy' for banning alcohol. Started the Easter Egg Roll.", presNote: "Won the most disputed election in history (until 2000). Ended Reconstruction." },
+  { num: 20, name: "James A. Garfield", years: "1881", wife: "Lucretia Garfield", wifeNote: "Nursed him for months after shooting. Raised 5 kids. Fiercely private but deeply respected.", presNote: "Shot by a disappointed office seeker. Doctors killed him more than the bullet did." },
+  { num: 21, name: "Chester A. Arthur", years: "1881-1885", wife: "Ellen Arthur", wifeNote: "Died before his presidency. He placed fresh flowers by her photo daily. His sister served as hostess.", presNote: "Surprised everyone by being decent. Civil service reform. Had great sideburns." },
+  { num: 22, name: "Grover Cleveland", years: "1885-1889", wife: "Frances Cleveland", wifeNote: "Youngest First Lady at 21. He was her legal guardian before they married. Told the staff 'we'll be back' when they lost.", presNote: "Only president to serve non-consecutive terms. Secret jaw surgery on a yacht." },
+  { num: 23, name: "Benjamin Harrison", years: "1889-1893", wife: "Caroline Harrison", wifeNote: "Started the White House china collection. Championed Johns Hopkins admitting women. Died in office.", presNote: "Grandson of a president. Put electricity in the White House but was scared to touch the switches." },
+  { num: 24, name: "Grover Cleveland (2nd term)", years: "1893-1897", wife: "Frances Cleveland", wifeNote: "She was right. They came back. Most popular First Lady of the century. Products used her image without permission.", presNote: "Panic of 1893. Pullman Strike. The comeback president." },
+  { num: 25, name: "William McKinley", years: "1897-1901", wife: "Ida McKinley", wifeNote: "Had epilepsy. He broke protocol to sit next to her at dinners in case she had a seizure. Devoted love story.", presNote: "Spanish-American War. Annexed Hawaii. Assassinated at the Buffalo expo." },
+  { num: 26, name: "Theodore Roosevelt", years: "1901-1909", wife: "Edith Roosevelt", wifeNote: "His second wife (first wife Alice died on the same day as his mother). Managed the chaos of 6 kids. Fierce gatekeeper.", presNote: "Trust buster. Teddy bear. Panama Canal. Youngest president. Got shot mid-speech and finished it." },
+  { num: 27, name: "William Howard Taft", years: "1909-1913", wife: "Helen 'Nellie' Taft", wifeNote: "Planted the cherry blossoms in DC. Had a stroke early in his term. She pushed him to run (he wanted the Supreme Court).", presNote: "Got stuck in a bathtub (maybe). Only president to also be Chief Justice." },
+  { num: 28, name: "Woodrow Wilson", years: "1913-1921", wife: "Ellen Wilson / Edith Wilson", wifeNote: "TWO wives. Ellen died in office. Edith essentially ran the country after his stroke. 'First woman president' debate.", presNote: "WWI. League of Nations. Massive stroke. Segregated the federal workforce." },
+  { num: 29, name: "Warren G. Harding", years: "1921-1923", wife: "Florence Harding", wifeNote: "Called 'the Duchess.' Five years older than him. May have poisoned him (conspiracy theory). Burned his papers.", presNote: "Teapot Dome scandal. Died in office. Affairs everywhere. 'I am not fit for this office.'" },
+  { num: 30, name: "Calvin Coolidge", years: "1923-1929", wife: "Grace Coolidge", wifeNote: "Beloved, charming, opposite of Silent Cal. Former teacher of deaf children. Had a pet raccoon named Rebecca.", presNote: "Silent Cal. 'The business of America is business.' Slept 11 hours a day." },
+  { num: 31, name: "Herbert Hoover", years: "1929-1933", wife: "Lou Henry Hoover", wifeNote: "Spoke Mandarin with Herbert to keep conversations private. Geologist. First Lady to give a radio address.", presNote: "Great Depression scapegoat. Hoovervilles. Actually a humanitarian hero before presidency." },
+  { num: 32, name: "Franklin D. Roosevelt", years: "1933-1945", wife: "Eleanor Roosevelt", wifeNote: "Redefined First Lady. UN delegate. Civil rights champion. Her own newspaper column. Possibly the most influential FL ever.", presNote: "New Deal. WWII. Four terms. Polio. Fireside chats. Died in office." },
+  { num: 33, name: "Harry S. Truman", years: "1945-1953", wife: "Bess Truman", wifeNote: "Most private First Lady of the 20th century. Called the White House 'the great white jail.' Burned her letters.", presNote: "Dropped the bomb. Korean War. 'The buck stops here.' Nobody expected him to win in '48." },
+  { num: 34, name: "Dwight D. Eisenhower", years: "1953-1961", wife: "Mamie Eisenhower", wifeNote: "Pink was her signature color. Loved I Love Lucy. Rumored (wrongly) to have a drinking problem. Bangs icon.", presNote: "Interstate highways. Military-industrial complex speech. WWII hero turned president." },
+  { num: 35, name: "John F. Kennedy", years: "1961-1963", wife: "Jacqueline Kennedy", wifeNote: "Style icon. Restored the White House. That pink suit. Grace under unimaginable pressure.", presNote: "Cuban Missile Crisis. Space race. Camelot. Assassinated in Dallas." },
+  { num: 36, name: "Lyndon B. Johnson", years: "1963-1969", wife: "Lady Bird Johnson", wifeNote: "Highway Beautification Act. Savvy businesswoman. Pushed him not to run again. Wildflower queen.", presNote: "Civil Rights Act. Great Society. Vietnam destroyed his legacy. Complicated giant." },
+  { num: 37, name: "Richard Nixon", years: "1969-1974", wife: "Pat Nixon", wifeNote: "Most traveled First Lady of her era. Quietly pushed him on women's rights and civil rights. Deserved better.", presNote: "Opened China. Watergate. Only president to resign. 'I am not a crook.'" },
+  { num: 38, name: "Gerald Ford", years: "1974-1977", wife: "Betty Ford", wifeNote: "Radical honesty. Spoke openly about breast cancer, addiction. Founded the Betty Ford Center. Changed everything.", presNote: "Never elected president or VP. Pardoned Nixon. Good guy, boring president." },
+  { num: 39, name: "Jimmy Carter", years: "1977-1981", wife: "Rosalynn Carter", wifeNote: "Sat in on Cabinet meetings. Mental health advocate for decades. True equal partnership. 'Steel Magnolia.'", presNote: "Camp David Accords. Hostage crisis. Better ex-president than president. Habitat for Humanity." },
+  { num: 40, name: "Ronald Reagan", years: "1981-1989", wife: "Nancy Reagan", wifeNote: "'Just Say No.' Controversial astrologer. Fiercely protective. Their love letters are legendary.", presNote: "Reaganomics. 'Tear down this wall.' Iran-Contra. Actor turned president." },
+  { num: 41, name: "George H.W. Bush", years: "1989-1993", wife: "Barbara Bush", wifeNote: "Literacy advocate. Famously said she didn't dye her hair or care what people thought. Mother and wife of presidents.", presNote: "Gulf War. End of Cold War. 'Read my lips.' One term." },
+  { num: 42, name: "Bill Clinton", years: "1993-2001", wife: "Hillary Clinton", wifeNote: "Healthcare reform attempt. Senator. Secretary of State. First female major-party presidential nominee.", presNote: "Impeachment. Economy boomed. NAFTA. The 90s president." },
+  { num: 43, name: "George W. Bush", years: "2001-2009", wife: "Laura Bush", wifeNote: "Former librarian and teacher. Literacy advocate. Quiet strength after 9/11.", presNote: "9/11. Afghanistan. Iraq. 'Mission Accomplished.' Hurricane Katrina." },
+  { num: 44, name: "Barack Obama", years: "2009-2017", wife: "Michelle Obama", wifeNote: "Let's Move! campaign. Became Beyonce-level cultural icon. Princeton and Harvard Law. Mom-in-Chief.", presNote: "First Black president. ACA. Bin Laden raid. 'Yes We Can.'" },
+  { num: 45, name: "Donald Trump", years: "2017-2021", wife: "Melania Trump", wifeNote: "Former model. Most private modern First Lady. 'Be Best' campaign. Rarely at the White House.", presNote: "Border wall. Two impeachments. COVID. 'You're fired' president." },
+  { num: 46, name: "Joe Biden", years: "2021-2025", wife: "Jill Biden", wifeNote: "First First Lady to hold a paying job (teaching) while in the White House. 'Dr. Biden.'", presNote: "Oldest president. Infrastructure bill. Withdrew from 2024 race." }
+];
+
+const DAILY_TOPICS = [
+  // WARS & BATTLES
+  { title: "The Battle of Bunker Hill", desc: "They actually fought on Breed's Hill. Classic American mix-up.", cat: "wars" },
+  { title: "The War of 1812: America's Forgotten War", desc: "We fought Britain again and nobody really won. But we got a national anthem.", cat: "wars" },
+  { title: "The Alamo", desc: "Remember it? Here's what actually happened vs. the myth.", cat: "wars" },
+  { title: "The Battle of Gettysburg", desc: "Three days that changed the Civil War and American history.", cat: "wars" },
+  { title: "Sherman's March to the Sea", desc: "Total war comes to the South. Still controversial.", cat: "wars" },
+  { title: "The Rough Riders", desc: "Teddy Roosevelt's volunteer cavalry in the Spanish-American War.", cat: "wars" },
+  { title: "D-Day: The American Perspective", desc: "What the boys from Iowa and everywhere else faced on those beaches.", cat: "wars" },
+  { title: "The Battle of Midway", desc: "Four minutes changed the Pacific War.", cat: "wars" },
+  { title: "Korea: The Forgotten War", desc: "Why we don't talk about it and why we should.", cat: "wars" },
+  { title: "The Tet Offensive", desc: "When America realized Vietnam wasn't going to plan.", cat: "wars" },
+  { title: "Valley Forge", desc: "No battle happened here. The real enemy was winter.", cat: "wars" },
+  { title: "The Battle of New Orleans", desc: "Fought after the peace treaty was signed. Oops.", cat: "wars" },
+  { title: "The Bombing of Pearl Harbor", desc: "December 7, 1941. A date which will live in infamy.", cat: "wars" },
+  { title: "The Mexican-American War", desc: "How the US got California, Nevada, Utah, and more.", cat: "wars" },
+  { title: "Iwo Jima and That Flag Photo", desc: "The story behind the most famous war photograph ever taken.", cat: "wars" },
+
+  // FOUNDING ERA
+  { title: "The Boston Tea Party", desc: "342 chests of tea. No actual Native Americans. Lots of drama.", cat: "founding" },
+  { title: "The Declaration: What They Cut", desc: "Jefferson's first draft was way spicier. Here's what got edited.", cat: "founding" },
+  { title: "The Articles of Confederation", desc: "America's first constitution was a mess. That's why we got a second one.", cat: "founding" },
+  { title: "The Federalist Papers", desc: "Hamilton, Madison, and Jay wrote 85 essays to sell the Constitution.", cat: "founding" },
+  { title: "The Whiskey Rebellion", desc: "First test of federal authority. Washington literally rode out to crush it.", cat: "founding" },
+  { title: "Benjamin Franklin: America's First Influencer", desc: "Inventor, diplomat, flirt, and founding father.", cat: "founding" },
+  { title: "Alexander Hamilton vs. Aaron Burr", desc: "The duel that changed everything.", cat: "founding" },
+  { title: "The Constitutional Convention", desc: "55 men, one hot Philadelphia summer, and a new nation.", cat: "founding" },
+  { title: "Paul Revere's Real Ride", desc: "He never shouted what you think he shouted. Longfellow lied.", cat: "founding" },
+  { title: "Common Sense by Thomas Paine", desc: "The pamphlet that convinced America to break up with England.", cat: "founding" },
+  { title: "The Sons of Liberty", desc: "Revolutionaries or troublemakers? Depends who you ask.", cat: "founding" },
+  { title: "The Bill of Rights", desc: "The first 10 amendments and why they almost didn't happen.", cat: "founding" },
+
+  // INVENTIONS & INNOVATION
+  { title: "The Cotton Gin Changed Everything", desc: "Eli Whitney's invention was supposed to reduce slavery. It did the opposite.", cat: "inventions" },
+  { title: "The Telegraph: America Gets Connected", desc: "'What hath God wrought?' The first message that changed communication.", cat: "inventions" },
+  { title: "Edison vs. Tesla", desc: "The current wars. AC vs DC. Elephant electrocution. Wild times.", cat: "inventions" },
+  { title: "The Wright Brothers", desc: "Two bike mechanics from Ohio changed the world at Kitty Hawk.", cat: "inventions" },
+  { title: "The Transcontinental Railroad", desc: "Golden spike, immigrant labor, and connecting a continent.", cat: "inventions" },
+  { title: "The Model T Changed America", desc: "Henry Ford didn't invent the car. He made everyone able to buy one.", cat: "inventions" },
+  { title: "The Telephone: Bell vs. Gray", desc: "Two men filed patents the same day. Drama ensued.", cat: "inventions" },
+  { title: "The Manhattan Project", desc: "Building the atomic bomb in secret. Science meets moral crisis.", cat: "inventions" },
+  { title: "ARPANET: The Internet's Grandpa", desc: "The military project that accidentally built the modern world.", cat: "inventions" },
+  { title: "The Erie Canal", desc: "'Clinton's Ditch' transformed New York and American commerce.", cat: "inventions" },
+  { title: "The Lightbulb Moment", desc: "Edison's lab, 10,000 experiments, and the invention that lit up the world.", cat: "inventions" },
+  { title: "The Sewing Machine Wars", desc: "Multiple inventors, patent battles, and the machine that changed fashion.", cat: "inventions" },
+
+  // CULTURE
+  { title: "Prohibition: America's Driest Decade", desc: "18th Amendment. Speakeasies. Bootleggers. The 'noble experiment' that wasn't.", cat: "culture" },
+  { title: "The Roaring Twenties", desc: "Flappers, jazz, and the decade that invented modern America.", cat: "culture" },
+  { title: "Woodstock", desc: "Three days of peace, music, and mud in upstate New York.", cat: "culture" },
+  { title: "The Harlem Renaissance", desc: "When Black art, music, and literature exploded in 1920s New York.", cat: "culture" },
+  { title: "Hollywood's Golden Age", desc: "How a California suburb became the entertainment capital of the world.", cat: "culture" },
+  { title: "Route 66: The Mother Road", desc: "2,400 miles of American mythology.", cat: "culture" },
+  { title: "The Summer of Love (1967)", desc: "San Francisco, flower power, and the counterculture revolution.", cat: "culture" },
+  { title: "Baseball: America's Pastime", desc: "From Doubleday myth to national obsession.", cat: "culture" },
+  { title: "The Great American Novel", desc: "From Moby Dick to Gatsby: books that defined us.", cat: "culture" },
+  { title: "Rock and Roll Origins", desc: "How Black music became America's soundtrack.", cat: "culture" },
+  { title: "The Beat Generation", desc: "Kerouac, Ginsberg, and the writers who rejected the 1950s.", cat: "culture" },
+  { title: "Coney Island", desc: "America's first amusement park and the birth of fun.", cat: "culture" },
+  { title: "The Chautauqua Movement", desc: "America's first adult education craze. TED talks before TED.", cat: "culture" },
+  { title: "Vaudeville to Broadway", desc: "How American theater evolved from variety shows to high art.", cat: "culture" },
+
+  // CIVIL RIGHTS
+  { title: "Frederick Douglass", desc: "Escaped slave turned greatest orator in American history.", cat: "civil-rights" },
+  { title: "The Underground Railroad", desc: "Not underground. Not a railroad. But absolutely heroic.", cat: "civil-rights" },
+  { title: "Sojourner Truth", desc: "'Ain't I a Woman?' The speech that still echoes.", cat: "civil-rights" },
+  { title: "The Seneca Falls Convention", desc: "1848: the day women formally demanded equal rights.", cat: "civil-rights" },
+  { title: "Brown v. Board of Education", desc: "The Supreme Court case that desegregated schools (on paper).", cat: "civil-rights" },
+  { title: "Rosa Parks and the Montgomery Bus Boycott", desc: "She wasn't tired. She was tired of giving in.", cat: "civil-rights" },
+  { title: "The March on Washington", desc: "250,000 people. One dream. August 28, 1963.", cat: "civil-rights" },
+  { title: "The Freedom Riders", desc: "Interracial buses into the segregated South. Firebombed. Kept going.", cat: "civil-rights" },
+  { title: "Emmett Till", desc: "14 years old. His murder galvanized the civil rights movement.", cat: "civil-rights" },
+  { title: "Women's Suffrage: The Long Fight", desc: "72 years from Seneca Falls to the 19th Amendment.", cat: "civil-rights" },
+  { title: "Cesar Chavez and the Farm Workers", desc: "Si se puede. The fight for migrant worker rights.", cat: "civil-rights" },
+  { title: "Stonewall", desc: "The 1969 uprising that launched the modern LGBTQ+ rights movement.", cat: "civil-rights" },
+  { title: "The Little Rock Nine", desc: "Nine teenagers walked into a school and changed history.", cat: "civil-rights" },
+  { title: "Harriet Tubman", desc: "She freed herself, then went back for everyone else.", cat: "civil-rights" },
+
+  // WESTWARD EXPANSION
+  { title: "Lewis and Clark", desc: "The epic journey west. Sacagawea. Grizzly bears. Uncharted territory.", cat: "westward" },
+  { title: "The Oregon Trail", desc: "Not just a computer game. Dysentery was really that bad.", cat: "westward" },
+  { title: "The California Gold Rush", desc: "1849. Sutter's Mill. 300,000 people headed west.", cat: "westward" },
+  { title: "Manifest Destiny", desc: "The idea that America was meant to stretch coast to coast. At whose expense?", cat: "westward" },
+  { title: "The Homestead Act", desc: "Free land! (If you could survive five years on the prairie.)", cat: "westward" },
+  { title: "The Trail of Tears", desc: "Forced removal of Native Americans. 4,000 died. National shame.", cat: "westward" },
+  { title: "Buffalo Soldiers", desc: "Black soldiers on the frontier. Named by Native Americans.", cat: "westward" },
+  { title: "The Pony Express", desc: "18 months of glory. Then the telegraph killed it.", cat: "westward" },
+  { title: "Sitting Bull and Custer's Last Stand", desc: "Little Bighorn. The most famous defeat in American military history.", cat: "westward" },
+  { title: "The Oklahoma Land Rush", desc: "Noon, April 22, 1889. Ready, set, CLAIM.", cat: "westward" },
+  { title: "Wild West Myths vs. Reality", desc: "Cowboys, outlaws, and what the West was really like.", cat: "westward" },
+  { title: "The Donner Party", desc: "The wagon train that went very, very wrong.", cat: "westward" },
+
+  // ODDITIES & WEIRD HISTORY
+  { title: "The Great Molasses Flood of 1919", desc: "2.3 million gallons of molasses flooded Boston. 21 people died. Not a joke.", cat: "oddities" },
+  { title: "The Pig War of 1859", desc: "The US and Britain almost went to war over a dead pig on San Juan Island.", cat: "oddities" },
+  { title: "President Taft's Bathtub", desc: "Did he really get stuck? Let's investigate.", cat: "oddities" },
+  { title: "The White House Zoo", desc: "Presidents kept alligators, hippos, bears, and a possum.", cat: "oddities" },
+  { title: "Corpse Synod", desc: "When they put a dead pope on trial. Wait, that's European. How about...", cat: "oddities" },
+  { title: "The Night the Stars Fell", desc: "1833 Leonid meteor shower. People thought the world was ending.", cat: "oddities" },
+  { title: "When Congress Beat Each Other Up", desc: "The caning of Charles Sumner and other congressional violence.", cat: "oddities" },
+  { title: "America's Last Duel", desc: "When gentlemen settled disputes with pistols.", cat: "oddities" },
+  { title: "The Dancing Plague... American Edition", desc: "Mass hysteria events in American history.", cat: "oddities" },
+  { title: "Presidential Death Coincidences", desc: "Jefferson and Adams died the same day. Lincoln and Kennedy parallels.", cat: "oddities" },
+  { title: "The Curse of Tippecanoe", desc: "Every president elected in a year ending in 0 died in office... until Reagan.", cat: "oddities" },
+  { title: "Thanksgiving's Weird History", desc: "It wasn't always in November and wasn't always a thing.", cat: "oddities" },
+  { title: "The Toast That Built a Monument", desc: "How a stolen toast (bread) launched a fundraising campaign for the Washington Monument.", cat: "oddities" },
+
+  // DISASTERS
+  { title: "The Great Chicago Fire", desc: "Mrs. O'Leary's cow probably didn't do it. But Chicago burned anyway.", cat: "disasters" },
+  { title: "The San Francisco Earthquake (1906)", desc: "The quake was bad. The fire was worse.", cat: "disasters" },
+  { title: "The Titanic's American Story", desc: "The millionaires, the immigrants, and the aftermath.", cat: "disasters" },
+  { title: "The Dust Bowl", desc: "When the Great Plains turned to dust and families fled west.", cat: "disasters" },
+  { title: "The Johnstown Flood", desc: "A dam broke. 2,209 people died. The rich owners faced zero consequences.", cat: "disasters" },
+  { title: "The Triangle Shirtwaist Fire", desc: "146 workers died. It changed labor laws forever.", cat: "disasters" },
+  { title: "The Galveston Hurricane of 1900", desc: "Deadliest natural disaster in US history. 8,000+ dead.", cat: "disasters" },
+  { title: "The Hindenburg", desc: "'Oh, the humanity!' The airship era ends in 37 seconds.", cat: "disasters" },
+  { title: "Three Mile Island", desc: "America's nuclear scare. What actually happened.", cat: "disasters" },
+  { title: "The Challenger Disaster", desc: "73 seconds. A nation watched live. Including kids in classrooms.", cat: "disasters" },
+
+  // SCIENCE & EXPLORATION
+  { title: "The Moon Landing", desc: "July 20, 1969. One giant leap. What happened behind the scenes.", cat: "science" },
+  { title: "The Scopes Monkey Trial", desc: "Evolution on trial in Tennessee. Science vs. religion, 1925.", cat: "science" },
+  { title: "The Tuskegee Experiment", desc: "40 years of unethical medical experiments on Black men. Horrifying.", cat: "science" },
+  { title: "George Washington Carver", desc: "The peanut guy did way more than peanuts.", cat: "science" },
+  { title: "NASA's Hidden Figures", desc: "The Black women mathematicians who got us to space.", cat: "science" },
+  { title: "Jonas Salk and the Polio Vaccine", desc: "He refused to patent it. 'Could you patent the sun?'", cat: "science" },
+  { title: "The Space Race", desc: "Sputnik to Apollo. When beating the Soviets meant going to the moon.", cat: "science" },
+  { title: "Lewis and Clark's Scientific Discoveries", desc: "178 plants and 122 animals unknown to science.", cat: "science" },
+
+  // ECONOMY & BUSINESS
+  { title: "The Great Depression", desc: "1929 crash to WWII. America's darkest economic chapter.", cat: "economy" },
+  { title: "The Panic of 1873", desc: "The original 'Great Depression' that nobody remembers.", cat: "economy" },
+  { title: "The Robber Barons", desc: "Rockefeller, Carnegie, Vanderbilt, Morgan. Captains of industry or villains?", cat: "economy" },
+  { title: "The New Deal", desc: "FDR's alphabet soup of programs. CCC, WPA, SSA, and more.", cat: "economy" },
+  { title: "The GI Bill", desc: "How one law created the American middle class.", cat: "economy" },
+  { title: "Child Labor in America", desc: "Kids in coal mines and factories. The photos that changed laws.", cat: "economy" },
+  { title: "The Rise of Suburbia", desc: "Levittown, white flight, and the American Dream with a lawn.", cat: "economy" },
+  { title: "The Dot-Com Bubble", desc: "When everyone got rich on the internet. Then didn't.", cat: "economy" },
+
+  // CRIME & SCANDALS
+  { title: "Al Capone and Prohibition Chicago", desc: "Scarface ran Chicago. The feds got him on taxes.", cat: "crime" },
+  { title: "Bonnie and Clyde", desc: "Depression-era outlaws. Folk heroes or cold-blooded killers?", cat: "crime" },
+  { title: "The Lindbergh Baby Kidnapping", desc: "Called 'the crime of the century.' America was obsessed.", cat: "crime" },
+  { title: "Lizzie Borden", desc: "Did she or didn't she? The axe murders that captivated America.", cat: "crime" },
+  { title: "The Salem Witch Trials", desc: "Mass hysteria in colonial Massachusetts. 20 people executed.", cat: "crime" },
+  { title: "Watergate", desc: "The scandal that brought down a president. Follow the money.", cat: "crime" },
+  { title: "The Teapot Dome Scandal", desc: "The biggest government scandal before Watergate.", cat: "crime" },
+  { title: "John Wilkes Booth's Escape", desc: "What happened after he shot Lincoln. 12 days on the run.", cat: "crime" },
+
+  // SPORTS HISTORY
+  { title: "Jackie Robinson Breaks the Barrier", desc: "April 15, 1947. Baseball would never be the same.", cat: "sports" },
+  { title: "Jesse Owens at the 1936 Olympics", desc: "A Black athlete defeats Hitler's master race theory.", cat: "sports" },
+  { title: "The Miracle on Ice", desc: "1980. A bunch of college kids beat the Soviet hockey team.", cat: "sports" },
+  { title: "Muhammad Ali Refuses the Draft", desc: "'I ain't got no quarrel with them Viet Cong.' Cost him everything.", cat: "sports" },
+  { title: "Title IX Changed Everything", desc: "1972. Women's sports would never be the same.", cat: "sports" },
+  { title: "The First Super Bowl", desc: "It wasn't even called the Super Bowl yet. Tickets were $12.", cat: "sports" },
+  { title: "Babe Ruth", desc: "The Sultan of Swat. Hot dogs, home runs, and American legend.", cat: "sports" },
+
+  // HOLIDAYS & TRADITIONS
+  { title: "How Christmas Became American", desc: "It was banned in Boston. Then Dickens and Coca-Cola got involved.", cat: "holidays" },
+  { title: "The Real Story of Thanksgiving", desc: "The Pilgrims, the Wampanoag, and what actually happened.", cat: "holidays" },
+  { title: "The Fourth of July", desc: "They didn't actually sign on July 4th. Here's the real story.", cat: "holidays" },
+  { title: "Memorial Day Origins", desc: "Freed slaves started it. Then it got complicated.", cat: "holidays" },
+  { title: "Halloween in America", desc: "From immigrant tradition to $10 billion industry.", cat: "holidays" },
+  { title: "The History of Black Friday", desc: "It used to mean something very different.", cat: "holidays" },
+  { title: "Valentine's Day: American Edition", desc: "Esther Howland and the birth of the American Valentine.", cat: "holidays" },
+
+  // FOOD HISTORY
+  { title: "How Pizza Became American", desc: "From immigrant food to national obsession.", cat: "food" },
+  { title: "The History of BBQ", desc: "Regional styles, enslaved pit masters, and America's original cuisine.", cat: "food" },
+  { title: "TV Dinners Changed Everything", desc: "Swanson had too many turkeys. America got frozen dinners.", cat: "food" },
+  { title: "Coca-Cola: A History", desc: "Started as medicine. Became the world's most famous drink.", cat: "food" },
+  { title: "The Invention of Fast Food", desc: "White Castle to McDonald's. How speed eating took over.", cat: "food" },
+  { title: "Apple Pie Isn't American", desc: "The most American dessert is actually British. Plot twist.", cat: "food" },
+  { title: "The Ice Cream Cone", desc: "Invented at the 1904 World's Fair. Maybe. There are competing claims.", cat: "food" },
+  { title: "Prohibition Cocktails", desc: "Bad booze led to creative mixing. The birth of the American cocktail.", cat: "food" },
+
+  // ============ ADDITIONAL TOPICS (through end of 2027) ============
+
+  // MORE WARS & BATTLES
+  { title: "The Siege of Yorktown", desc: "The battle that actually ended the Revolution. Cornwallis surrendered.", cat: "wars" },
+  { title: "The Battle of Antietam", desc: "Bloodiest single day in American history. 23,000 casualties.", cat: "wars" },
+  { title: "The USS Maine Explosion", desc: "'Remember the Maine!' The mysterious explosion that started the Spanish-American War.", cat: "wars" },
+  { title: "The Battle of the Bulge", desc: "Hitler's last gamble. American troops held the line in freezing Belgium.", cat: "wars" },
+  { title: "Guadalcanal", desc: "The first major American offensive in the Pacific. Six brutal months.", cat: "wars" },
+  { title: "The Barbary Wars", desc: "America's first overseas military action. Pirates vs. the US Navy.", cat: "wars" },
+  { title: "The Battle of Shiloh", desc: "Grant nearly lost. 24,000 casualties in two days. Nobody expected it.", cat: "wars" },
+  { title: "The Navajo Code Talkers", desc: "Their language was the only unbreakable code in WWII.", cat: "wars" },
+  { title: "The Battle of Trenton", desc: "Washington crossed the Delaware on Christmas. Changed the war.", cat: "wars" },
+  { title: "The Bataan Death March", desc: "76,000 POWs forced to march 65 miles. One of WWII's worst atrocities.", cat: "wars" },
+  { title: "The Gulf of Tonkin Incident", desc: "The event that escalated Vietnam. Except it might not have happened.", cat: "wars" },
+  { title: "The Fall of Saigon", desc: "April 30, 1975. Helicopters on rooftops. The end of the Vietnam War.", cat: "wars" },
+  { title: "Fort Sumter", desc: "The first shots of the Civil War. Nobody died in the battle itself.", cat: "wars" },
+  { title: "The Doolittle Raid", desc: "16 bombers hit Tokyo four months after Pearl Harbor. A morale game-changer.", cat: "wars" },
+
+  // MORE FOUNDING ERA & EARLY REPUBLIC
+  { title: "The XYZ Affair", desc: "France demanded bribes. America said no. Almost started a war.", cat: "founding" },
+  { title: "Shays' Rebellion", desc: "Debt-crushed farmers revolted. It scared the founders into writing the Constitution.", cat: "founding" },
+  { title: "The Alien and Sedition Acts", desc: "John Adams made it illegal to criticize the government. It went badly.", cat: "founding" },
+  { title: "The Louisiana Purchase", desc: "Jefferson bought 828,000 square miles for $15 million. Deal of the millennium.", cat: "founding" },
+  { title: "John Adams and Thomas Jefferson's Letters", desc: "Former rivals became pen pals. Then died on the same July 4th.", cat: "founding" },
+  { title: "The First Bank of the United States", desc: "Hamilton vs. Jefferson, round one. The fight that defined American economics.", cat: "founding" },
+  { title: "Marbury v. Madison", desc: "The Supreme Court case that gave courts the power to strike down laws.", cat: "founding" },
+  { title: "The Midnight Judges", desc: "Adams stayed up all night appointing judges before Jefferson took over.", cat: "founding" },
+  { title: "Betsy Ross: Fact vs. Fiction", desc: "Did she really sew the first flag? The evidence is... complicated.", cat: "founding" },
+
+  // MORE INVENTIONS & INNOVATION
+  { title: "The Printing Press in America", desc: "Benjamin Franklin's printing empire and how it shaped a revolution.", cat: "inventions" },
+  { title: "Eli Whitney's Other Invention", desc: "Interchangeable parts changed manufacturing forever. The cotton gin was just the start.", cat: "inventions" },
+  { title: "The Typewriter", desc: "Mark Twain was the first author to submit a typed manuscript.", cat: "inventions" },
+  { title: "Kodak and the Camera Revolution", desc: "'You press the button, we do the rest.' George Eastman democratized photography.", cat: "inventions" },
+  { title: "Air Conditioning Changed America", desc: "Without AC, there's no Sun Belt, no Houston, no modern South.", cat: "inventions" },
+  { title: "The First Television Broadcast", desc: "Philo Farnsworth was 21 years old. He invented the future.", cat: "inventions" },
+  { title: "The Atomic Clock", desc: "How America standardized time and why it mattered.", cat: "inventions" },
+  { title: "Frozen Food: Clarence Birdseye", desc: "He got the idea from watching Inuit freeze fish. Changed how America eats.", cat: "inventions" },
+  { title: "The Elevator and the Skyscraper", desc: "Elisha Otis made it safe. Then cities went vertical.", cat: "inventions" },
+  { title: "The Phonograph", desc: "Edison recorded 'Mary Had a Little Lamb' and humans could replay sound for the first time.", cat: "inventions" },
+  { title: "Morse Code and Samuel Morse", desc: "A painter invented long-distance communication because his wife died while he was away.", cat: "inventions" },
+
+  // MORE CULTURE
+  { title: "The Lost Generation", desc: "Hemingway, Fitzgerald, and the Americans who fled to Paris after WWI.", cat: "culture" },
+  { title: "Motown Records", desc: "Berry Gordy built a hit factory in Detroit. Changed American music forever.", cat: "culture" },
+  { title: "The Wizard of Oz: An American Allegory?", desc: "Some say it's about the gold standard. Others say it's just a story.", cat: "culture" },
+  { title: "Comic Books and the American Way", desc: "Superman debuted in 1938. Two Jewish kids from Cleveland created an icon.", cat: "culture" },
+  { title: "Drive-In Theaters", desc: "Peak Americana. 4,000+ screens in the 1950s. Now almost gone.", cat: "culture" },
+  { title: "The Lyceum Movement", desc: "Before Netflix, Americans went to lecture halls for entertainment.", cat: "culture" },
+  { title: "Barnum and the American Circus", desc: "The Greatest Showman was also the greatest con man.", cat: "culture" },
+  { title: "Norman Rockwell's America", desc: "He painted the country we wanted to be. Not always the one we were.", cat: "culture" },
+  { title: "The Twist and Dance Crazes", desc: "How Chubby Checker changed the way America moved.", cat: "culture" },
+  { title: "Mark Twain: America's Voice", desc: "He made fun of everything. Congress, religion, humanity. Still relevant.", cat: "culture" },
+  { title: "Jazz: America's Music", desc: "Born in New Orleans. Raised in Chicago. Conquered the world.", cat: "culture" },
+  { title: "The Rise of Hip-Hop", desc: "A block party in the Bronx in 1973 became a global cultural force.", cat: "culture" },
+  { title: "Walt Disney and the American Dream", desc: "A bankrupt cartoonist built the most powerful entertainment empire ever.", cat: "culture" },
+  { title: "The National Parks Idea", desc: "'America's best idea.' How we decided to protect wilderness.", cat: "culture" },
+  { title: "Dime Novels and Pulp Fiction", desc: "Cheap entertainment for the masses. The original binge reading.", cat: "culture" },
+
+  // MORE CIVIL RIGHTS
+  { title: "Ida B. Wells and the Anti-Lynching Campaign", desc: "She documented the horror with data and journalism. Fearless.", cat: "civil-rights" },
+  { title: "The Selma to Montgomery Marches", desc: "Bloody Sunday. The Edmund Pettus Bridge. America watched on TV.", cat: "civil-rights" },
+  { title: "Thurgood Marshall", desc: "From civil rights lawyer to first Black Supreme Court justice.", cat: "civil-rights" },
+  { title: "The Woolworth's Sit-In", desc: "Four college students sat at a lunch counter in Greensboro. Changed everything.", cat: "civil-rights" },
+  { title: "The Chinese Exclusion Act", desc: "America's first law banning an entire nationality. Lasted 61 years.", cat: "civil-rights" },
+  { title: "Japanese American Internment", desc: "120,000 people locked up for their ancestry. Executive Order 9066.", cat: "civil-rights" },
+  { title: "The Americans with Disabilities Act", desc: "1990. The Capitol Crawl and the fight for disability rights.", cat: "civil-rights" },
+  { title: "Medgar Evers", desc: "NAACP leader assassinated in his driveway. His killer walked free for 30 years.", cat: "civil-rights" },
+  { title: "The 14th Amendment", desc: "Equal protection under the law. The most litigated amendment in history.", cat: "civil-rights" },
+  { title: "Fannie Lou Hamer", desc: "'I'm sick and tired of being sick and tired.' Mississippi freedom fighter.", cat: "civil-rights" },
+  { title: "The Indian Citizenship Act of 1924", desc: "Native Americans weren't citizens until 1924. Let that sink in.", cat: "civil-rights" },
+  { title: "Booker T. Washington vs. W.E.B. Du Bois", desc: "Two visions for Black America. The debate that shaped a century.", cat: "civil-rights" },
+
+  // MORE WESTWARD EXPANSION
+  { title: "The Comstock Lode", desc: "The silver strike that built Nevada and funded the Civil War.", cat: "westward" },
+  { title: "Barbed Wire Changed the West", desc: "Three strands of twisted steel ended the open range.", cat: "westward" },
+  { title: "The Klondike Gold Rush", desc: "100,000 people headed to Alaska in 1897. Most came back broke.", cat: "westward" },
+  { title: "Wyatt Earp and the OK Corral", desc: "30 seconds of gunfire. 140 years of mythology.", cat: "westward" },
+  { title: "Sacagawea", desc: "A teenage Shoshone mother guided Lewis and Clark across the continent.", cat: "westward" },
+  { title: "The Nez Perce Retreat", desc: "Chief Joseph led 800 people 1,170 miles trying to reach freedom.", cat: "westward" },
+  { title: "Calamity Jane", desc: "Sharpshooter, scout, frontierswoman. Half legend, half real.", cat: "westward" },
+  { title: "The Transcontinental Telegraph", desc: "Coast-to-coast communication in 1861. Killed the Pony Express overnight.", cat: "westward" },
+  { title: "Ghost Towns of the West", desc: "Boomtowns that went bust. Some are still standing.", cat: "westward" },
+  { title: "The Great Plains Blizzard of 1888", desc: "The Schoolhouse Blizzard killed 235 people, many of them children walking home.", cat: "westward" },
+
+  // MORE ODDITIES
+  { title: "The Capitol Moved Three Times", desc: "Before DC: New York, then Philadelphia. The deal that built Washington.", cat: "oddities" },
+  { title: "The Know-Nothing Party", desc: "Anti-immigrant political party of the 1850s. Their name was literal.", cat: "oddities" },
+  { title: "When America Tried Camels", desc: "The US Army imported camels for the desert Southwest. It didn't work.", cat: "oddities" },
+  { title: "The Petticoat Affair", desc: "Andrew Jackson's entire cabinet resigned over a woman's reputation.", cat: "oddities" },
+  { title: "The Great Stink of 1880s DC", desc: "The Potomac smelled so bad Congress considered moving.", cat: "oddities" },
+  { title: "Benjamin Harrison and the Light Switches", desc: "First president with electricity. Refused to touch the switches. Slept with lights on.", cat: "oddities" },
+  { title: "Presidential Pets Hall of Fame", desc: "Coolidge's raccoon. JFK's ponies. LBJ picking up his beagles by their ears.", cat: "oddities" },
+  { title: "The Code Duello in America", desc: "When shooting your rival was legal and expected. The rules of dueling.", cat: "oddities" },
+  { title: "Zombie Candidates", desc: "Politicians who died but still won their elections.", cat: "oddities" },
+  { title: "The Lost Colony of Roanoke", desc: "117 colonists vanished. One word carved in a tree: CROATOAN.", cat: "oddities" },
+  { title: "The Body Snatching Era", desc: "Medical schools needed cadavers. Grave robbers provided.", cat: "oddities" },
+  { title: "The Year Without a Summer", desc: "1816. A volcanic eruption in Indonesia ruined American crops. Snow in June.", cat: "oddities" },
+  { title: "The Great Moon Hoax of 1835", desc: "The New York Sun published that bat-people lived on the moon. People believed it.", cat: "oddities" },
+
+  // MORE DISASTERS
+  { title: "The Peshtigo Fire", desc: "Same night as the Chicago fire. Way deadlier. 1,500+ dead. Nobody remembers.", cat: "disasters" },
+  { title: "The 1918 Flu Pandemic in America", desc: "675,000 Americans died. Then we collectively forgot about it for 100 years.", cat: "disasters" },
+  { title: "The Sultana Disaster", desc: "Steamboat explosion killed 1,168 people. Worst maritime disaster in US history. Never heard of it.", cat: "disasters" },
+  { title: "The New London School Explosion", desc: "1937 Texas. A natural gas leak killed 295 students and teachers.", cat: "disasters" },
+  { title: "Hurricane Andrew", desc: "1992. Category 5. Changed building codes in Florida forever.", cat: "disasters" },
+  { title: "The Great Flood of 1927", desc: "The Mississippi flooded 27,000 square miles. Changed politics, music, and migration.", cat: "disasters" },
+  { title: "The Iroquois Theatre Fire", desc: "Chicago, 1903. 602 people died in 15 minutes. Changed fire safety laws.", cat: "disasters" },
+  { title: "The Centralia Mine Fire", desc: "Started in 1962. Still burning underground in Pennsylvania today.", cat: "disasters" },
+
+  // MORE SCIENCE & EXPLORATION
+  { title: "Benjamin Banneker", desc: "Black mathematician who helped survey DC and published an almanac. Wrote to Jefferson about slavery.", cat: "science" },
+  { title: "The Hubble Space Telescope", desc: "Launched with a flawed mirror. Fixed in orbit. Changed everything we know about the universe.", cat: "science" },
+  { title: "Robert Goddard: Father of Rocketry", desc: "The New York Times mocked him. Then we went to the moon.", cat: "science" },
+  { title: "The Transistor", desc: "Invented at Bell Labs in 1947. The tiny thing that built the modern world.", cat: "science" },
+  { title: "Rachel Carson and Silent Spring", desc: "One book launched the environmental movement. The pesticide industry tried to destroy her.", cat: "science" },
+  { title: "The Apollo 13 Disaster", desc: "'Houston, we've had a problem.' Getting the crew home alive.", cat: "science" },
+  { title: "Grace Hopper: Queen of Code", desc: "Navy admiral. Computer pioneer. Found the first literal computer bug.", cat: "science" },
+  { title: "The Human Genome Project", desc: "Mapping every gene in the human body. A $3 billion moonshot.", cat: "science" },
+  { title: "Yellowstone: America's First National Park", desc: "1872. The radical idea that nature belonged to everyone.", cat: "science" },
+  { title: "Thomas Edison's Menlo Park Lab", desc: "The world's first research lab. Invention became an industry.", cat: "science" },
+
+  // MORE ECONOMY & BUSINESS
+  { title: "The Panic of 1837", desc: "Banks collapsed, unemployment soared, and Martin Van Buren got blamed for everything.", cat: "economy" },
+  { title: "Andrew Carnegie's Gospel of Wealth", desc: "Make as much money as possible. Then give it all away. He mostly did.", cat: "economy" },
+  { title: "The Pullman Strike", desc: "A company town revolted. Federal troops were called in. Eugene Debs went to jail.", cat: "economy" },
+  { title: "Sears Catalog: Amazon Before Amazon", desc: "You could buy a house from a catalog. Delivered by train.", cat: "economy" },
+  { title: "The Federal Reserve", desc: "Created in 1913 after a secret meeting on Jekyll Island. Conspiracy theorists love this one.", cat: "economy" },
+  { title: "Black Wall Street", desc: "Tulsa's Greenwood District was the wealthiest Black community in America. Then 1921.", cat: "economy" },
+  { title: "The Marshall Plan", desc: "America spent $13 billion rebuilding Europe. Generosity or strategy? Both.", cat: "economy" },
+  { title: "The Bracero Program", desc: "Millions of Mexican workers invited in for cheap labor. Then sent back. Complicated legacy.", cat: "economy" },
+  { title: "The Interstate Highway System", desc: "Eisenhower's biggest legacy. 48,000 miles of road. Changed how America lives.", cat: "economy" },
+  { title: "Labor Day: More Than a Day Off", desc: "Born from the blood of striking workers. Why we celebrate in September, not May.", cat: "economy" },
+
+  // MORE CRIME & SCANDALS
+  { title: "The Rosenbergs", desc: "Executed for giving nuclear secrets to the Soviets. Were they guilty? Mostly yes.", cat: "crime" },
+  { title: "D.B. Cooper", desc: "Hijacked a plane, parachuted out with $200,000. Never found. Only unsolved hijacking.", cat: "crime" },
+  { title: "The Zodiac Killer", desc: "Terrorized the Bay Area. Sent coded messages. Never caught.", cat: "crime" },
+  { title: "Boss Tweed and Tammany Hall", desc: "The most corrupt political machine in American history. Thomas Nast drew him down.", cat: "crime" },
+  { title: "The Hatfields and the McCoys", desc: "America's most famous feud. It involved a pig, a romance, and a lot of guns.", cat: "crime" },
+  { title: "Pretty Boy Floyd", desc: "Oklahoma's Robin Hood. The FBI put him at the top of the most wanted list.", cat: "crime" },
+  { title: "The Leopold and Loeb Trial", desc: "Two wealthy teens committed 'the perfect murder.' Clarence Darrow saved them from the chair.", cat: "crime" },
+  { title: "The Black Sox Scandal", desc: "Eight White Sox players threw the 1919 World Series. 'Say it ain't so, Joe.'", cat: "crime" },
+
+  // MORE SPORTS
+  { title: "Billie Jean King vs. Bobby Riggs", desc: "The Battle of the Sexes. 90 million people watched. She won.", cat: "sports" },
+  { title: "The First Kentucky Derby", desc: "1875. America's oldest continuously held sporting event.", cat: "sports" },
+  { title: "Jim Thorpe", desc: "Greatest athlete of the 20th century. Olympic gold stripped because he once played semi-pro baseball.", cat: "sports" },
+  { title: "The Harlem Globetrotters", desc: "Started as a serious team. Became the most famous basketball show on earth.", cat: "sports" },
+  { title: "Wilma Rudolph", desc: "Couldn't walk as a child due to polio. Won three Olympic gold medals in sprinting.", cat: "sports" },
+  { title: "The Negro Leagues", desc: "Incredible talent, incredible injustice. The parallel baseball universe.", cat: "sports" },
+  { title: "The 1980 Olympic Boycott", desc: "Carter pulled the US out of Moscow. Cold War politics meets sports.", cat: "sports" },
+
+  // MORE HOLIDAYS & TRADITIONS
+  { title: "The Pledge of Allegiance", desc: "Written in 1892 by a socialist minister. 'Under God' wasn't added until 1954.", cat: "holidays" },
+  { title: "The Star-Spangled Banner", desc: "Francis Scott Key wrote it during a bombardment. It wasn't the anthem until 1931.", cat: "holidays" },
+  { title: "Veterans Day vs. Armistice Day", desc: "It used to celebrate the end of WWI. Then we changed it. Here's why.", cat: "holidays" },
+  { title: "Juneteenth", desc: "June 19, 1865. The enslaved people of Texas finally learned they were free. Two years late.", cat: "holidays" },
+  { title: "Earth Day", desc: "1970. 20 million Americans protested. The EPA was created that same year.", cat: "holidays" },
+  { title: "The History of the State Fair", desc: "Fried everything. Prize pigs. The butter cow. Peak Americana.", cat: "holidays" },
+
+  // MORE FOOD HISTORY
+  { title: "Peanut Butter: An American Obsession", desc: "We eat 700 million pounds a year. Other countries think we're weird.", cat: "food" },
+  { title: "The Automat", desc: "Food behind little glass doors. NYC's favorite lunch spot for 60 years.", cat: "food" },
+  { title: "Kellogg, Post, and the Cereal Wars", desc: "How Battle Creek, Michigan became the breakfast capital of the world.", cat: "food" },
+  { title: "The Diner: America's Kitchen", desc: "From railroad dining cars to roadside staples. The history of the greasy spoon.", cat: "food" },
+  { title: "The History of Bourbon", desc: "America's native spirit. Kentucky limestone water and charred oak barrels.", cat: "food" },
+  { title: "School Lunch in America", desc: "From charity to federal program. What kids ate and why it mattered.", cat: "food" },
+  { title: "Food Rationing in WWII", desc: "Sugar, coffee, meat, butter. Ration books and victory gardens.", cat: "food" },
+  { title: "The Oyster Craze", desc: "In the 1800s, Americans ate oysters like we eat chips. NYC was the oyster capital.", cat: "food" },
+  { title: "Jell-O: America's Most Famous Dessert", desc: "A bankrupt cough syrup maker sold the patent for $450. It became a $1 billion brand.", cat: "food" },
+
+  // NOTABLE AMERICANS (new category)
+  { title: "Harriet Beecher Stowe", desc: "Uncle Tom's Cabin sold 300,000 copies in a year. Lincoln allegedly called her the woman who started the war.", cat: "culture" },
+  { title: "John Brown's Raid", desc: "Abolitionist or terrorist? His raid on Harpers Ferry lit the fuse of the Civil War.", cat: "civil-rights" },
+  { title: "Clara Barton and the Red Cross", desc: "She brought battlefield nursing to America and founded the American Red Cross at age 60.", cat: "science" },
+  { title: "Annie Oakley", desc: "Could shoot a dime tossed in the air. The most famous sharpshooter in American history.", cat: "westward" },
+  { title: "Amelia Earhart", desc: "First woman to fly solo across the Atlantic. Disappeared over the Pacific. Still a mystery.", cat: "science" },
+  { title: "Houdini: The Great Escape Artist", desc: "Hungarian immigrant became the most famous performer in America. Died on Halloween.", cat: "culture" },
+  { title: "Susan B. Anthony", desc: "Voted illegally in 1872. Was arrested. Her trial was rigged. She became an icon.", cat: "civil-rights" },
+  { title: "Samuel Adams: The Original Agitator", desc: "The cousin nobody talks about. He basically organized the Revolution.", cat: "founding" },
+  { title: "Daniel Boone", desc: "Frontiersman, legend, Congressman. Half the stories about him are made up. Still awesome.", cat: "westward" },
+  { title: "Nikola Tesla in America", desc: "Immigrated with 4 cents. Invented AC power. Died broke in a hotel with his pigeons.", cat: "inventions" },
+  { title: "J. Robert Oppenheimer", desc: "'Now I am become death.' The man who built the bomb and then tried to stop it.", cat: "science" },
+  { title: "Dorothea Dix", desc: "She walked into a prison, saw mentally ill people in cages, and changed American mental health care.", cat: "civil-rights" },
+  { title: "P.T. Barnum's America", desc: "Hoaxes, freaks, and spectacle. He understood Americans better than anyone.", cat: "culture" },
+  { title: "W.E.B. Du Bois", desc: "First Black Harvard PhD. Founded the NAACP. Wrote The Souls of Black Folk. Moved to Ghana.", cat: "civil-rights" },
+  { title: "Andrew Carnegie: Rags to Richest", desc: "Scottish immigrant. Steel baron. Gave away $350 million (today: ~$10 billion). Built 2,500 libraries.", cat: "economy" },
+  { title: "John Muir and the Sierra Club", desc: "Walked 1,000 miles to the Gulf of Mexico. Then saved Yosemite.", cat: "science" },
+  { title: "Nellie Bly", desc: "Went undercover in an asylum. Raced around the world in 72 days. Journalism's first superstar.", cat: "culture" },
+  { title: "Robert E. Lee: Complicated Legacy", desc: "Great general or traitor? The debate that still divides America.", cat: "wars" },
+  { title: "Frederick Law Olmsted", desc: "Designed Central Park, Prospect Park, and the US Capitol grounds. Invented landscape architecture.", cat: "culture" },
+  { title: "Madam C.J. Walker", desc: "Born to former slaves. Built a hair care empire. First female self-made millionaire in America.", cat: "economy" },
+  { title: "The Wright Sister: Katharine Wright", desc: "Without her, the brothers might never have flown. She managed everything.", cat: "inventions" },
+  { title: "Henry David Thoreau at Walden", desc: "Lived in the woods for two years. Wrote about it. Inspired civil disobedience worldwide.", cat: "culture" },
+  { title: "Sitting Bull After Little Bighorn", desc: "Fled to Canada. Joined Buffalo Bill's show. Shot by police. A complicated end.", cat: "westward" },
+  { title: "Crazy Horse", desc: "Never photographed. Never signed a treaty. Never surrendered willingly. Lakota legend.", cat: "westward" },
+  { title: "Jane Addams and Hull House", desc: "Settlement houses, social work, and the first American woman to win the Nobel Peace Prize.", cat: "civil-rights" },
+  { title: "Alexander Graham Bell's Other Work", desc: "Beyond the phone: he worked on flight, hydrofoils, and education for the deaf.", cat: "inventions" },
+  { title: "Langston Hughes", desc: "The poet who gave voice to Black America during the Harlem Renaissance and beyond.", cat: "culture" },
+  { title: "The Real Uncle Sam", desc: "Based on a real person: Samuel Wilson, a meat packer from Troy, New York.", cat: "oddities" },
+  { title: "The Statue of Liberty Almost Didn't Happen", desc: "France built it. America couldn't afford the pedestal. Joseph Pulitzer crowdfunded it.", cat: "founding" },
+  { title: "Mount Rushmore: The Controversial Monument", desc: "Carved on sacred Lakota land. Took 14 years. Nobody died during construction.", cat: "culture" },
+  { title: "Ellis Island", desc: "12 million immigrants passed through. The gateway to America. Now a museum.", cat: "culture" },
+  { title: "The Liberty Bell Crack", desc: "Nobody knows exactly when it cracked. It hasn't rung since 1846.", cat: "oddities" },
+  { title: "The Smithsonian Institution", desc: "A British man who never visited America left $500,000 to found it. Why?", cat: "science" },
+  { title: "The Pinkerton Detective Agency", desc: "Bigger than the US Army at one point. Strike breakers. Lincoln's bodyguards.", cat: "crime" },
+  { title: "The Great Railroad Strike of 1877", desc: "America's first nationwide labor uprising. The National Guard was called.", cat: "economy" },
+  { title: "The Zoot Suit Riots", desc: "1943 Los Angeles. Servicemen attacked Mexican American youth. The clothes were the excuse.", cat: "civil-rights" },
+  { title: "The Pentagon Papers", desc: "Daniel Ellsberg leaked the truth about Vietnam. Nixon tried to destroy him.", cat: "wars" },
+  { title: "The Iran Hostage Crisis", desc: "444 days. Yellow ribbons. The event that defined Carter's presidency.", cat: "wars" },
+  { title: "The Bay of Pigs", desc: "JFK's biggest disaster. A failed invasion of Cuba in 90 hours.", cat: "wars" },
+  { title: "McCarthyism and the Red Scare", desc: "Senator Joseph McCarthy saw communists everywhere. He ruined lives. Then self-destructed.", cat: "crime" },
+  { title: "The Schenck Case and Shouting Fire", desc: "The Supreme Court case that defined free speech limits. And the quote everyone gets wrong.", cat: "founding" },
+  { title: "The 1968 Democratic Convention", desc: "Protests, police riots, tear gas, and the fracturing of the Democratic Party on live TV.", cat: "culture" },
+  { title: "Kent State", desc: "May 4, 1970. The National Guard shot 13 college students. Four died.", cat: "wars" },
+  { title: "The Panama Canal", desc: "America's biggest engineering project. 25,000 workers died building it.", cat: "inventions" },
+  { title: "The Camp David Accords", desc: "Carter locked Sadat and Begin in a cabin for 13 days. They made peace.", cat: "founding" },
+];
+
+
+// ============================================================
+// STATE
+// ============================================================
+
+let state = loadState();
+let currentMonth = new Date().getMonth();
+let currentYear = new Date().getFullYear();
+let currentTopicFilter = 'all';
+let topicSearchQuery = '';
+let presSearchQuery = '';
+
+function loadState() {
+  try {
+    const saved = localStorage.getItem('history-desk-state');
+    if (saved) return JSON.parse(saved);
+  } catch(e) {}
+  return {
+    publishedPres: { 1: { pres: true, wife: true }, 2: { pres: true, wife: true } }, // Washington & Adams done
+    publishedTopics: {},
+    usedTopics: {},
+    customTopics: [],
+    startDate: '2026-08-23' // Daily topics start here, first president Friday is Aug 28
+  };
+}
+
+function saveState() {
+  try {
+    localStorage.setItem('history-desk-state', JSON.stringify(state));
+  } catch(e) {}
+}
+
+// ============================================================
+// SCHEDULE GENERATION
+// ============================================================
+
+function generateSchedule(startDate, numWeeks) {
+  // Build a flat day-by-day schedule
+  // Pattern: President on FRIDAY, his wife the following MONDAY
+  // Daily shorter topics on all other days (Tue, Wed, Thu, Sat, Sun)
+  // Days before the first presidential Friday (Aug 28) still get daily topics
+  // President advances to next after the Monday wife post
+
+  const schedule = [];
+  const genStart = new Date(startDate + 'T12:00:00');
+  const firstPresFriday = new Date('2026-08-28T12:00:00');
+
+  const totalDays = numWeeks * 7;
+  let presIndex = 2; // Start at index 2 = Jefferson (0=Washington, 1=Adams already done)
+  let topicIndex = 0;
+  let presHadFriday = false; // Track if current president's Friday article is scheduled
+  const dayNames = ['Sun','Mon','Tue','Wed','Thu','Fri','Sat'];
+
+  const allItems = [];
+
+  for (let i = 0; i < totalDays; i++) {
+    const current = new Date(genStart);
+    current.setDate(current.getDate() + i);
+    const dayOfWeek = current.getDay();
+    const dateStr = formatDate(current);
+
+    const presidentialStarted = current >= firstPresFriday;
+
+    if (dayOfWeek === 5 && presidentialStarted && presIndex < PRESIDENTS.length) {
+      // FRIDAY = President article
+      const pres = PRESIDENTS[presIndex];
+      allItems.push({
+        date: dateStr,
+        day: 'Fri',
+        type: 'friday',
+        title: pres.name,
+        presNum: pres.num,
+        isPres: true
+      });
+      presHadFriday = true;
+    } else if (dayOfWeek === 1 && presidentialStarted && presHadFriday && presIndex < PRESIDENTS.length) {
+      // MONDAY = Wife article (only after that president's Friday was posted)
+      const pres = PRESIDENTS[presIndex];
+      const wifeName = pres.wife || `${pres.name}'s Hostess`;
+      allItems.push({
+        date: dateStr,
+        day: 'Mon',
+        type: 'monday',
+        title: wifeName,
+        presNum: pres.num,
+        isWife: true
+      });
+      // Advance to next president after wife is posted
+      presIndex++;
+      presHadFriday = false;
+    } else {
+      // ALL OTHER DAYS = Daily topic
+      if (topicIndex < DAILY_TOPICS.length) {
+        allItems.push({
+          date: dateStr,
+          day: dayNames[dayOfWeek],
+          type: 'daily',
+          title: DAILY_TOPICS[topicIndex].title,
+          topicIndex: topicIndex,
+          cat: DAILY_TOPICS[topicIndex].cat
+        });
+        topicIndex++;
+      }
+    }
+  }
+
+  // Group into weeks (Sun-Sat)
+  const weekMap = {};
+  allItems.forEach(item => {
+    const d = new Date(item.date + 'T12:00:00');
+    const sun = new Date(d);
+    sun.setDate(sun.getDate() - sun.getDay());
+    const weekKey = formatDate(sun);
+    if (!weekMap[weekKey]) weekMap[weekKey] = [];
+    weekMap[weekKey].push(item);
+  });
+
+  Object.keys(weekMap).sort().forEach(weekKey => {
+    schedule.push({ weekStart: weekKey, items: weekMap[weekKey] });
+  });
+
+  return schedule;
+}
+
+function formatDate(d) {
+  return d.toISOString().split('T')[0];
+}
+
+function formatDateDisplay(dateStr) {
+  const d = new Date(dateStr + 'T12:00:00');
+  return d.toLocaleDateString('en-US', { month: 'short', day: 'numeric' });
+}
+
+function formatWeekDisplay(dateStr) {
+  const d = new Date(dateStr + 'T12:00:00');
+  const end = new Date(d);
+  end.setDate(end.getDate() + 6);
+  return `Week of ${d.toLocaleDateString('en-US', { month: 'short', day: 'numeric', year: 'numeric' })}`;
+}
+
+// ============================================================
+// TABS
+// ============================================================
+
+function switchTab(tabId) {
+  document.querySelectorAll('.tab-btn').forEach(b => b.classList.remove('active'));
+  document.querySelectorAll('.tab-panel').forEach(p => p.classList.remove('active'));
+  document.getElementById('tab-' + tabId).classList.add('active');
+  event.target.classList.add('active');
+
+  if (tabId === 'calendar') renderCalendar();
+  if (tabId === 'schedule') renderSchedule();
+  if (tabId === 'presidents') renderPresidents();
+  if (tabId === 'topics') renderTopics();
+}
+
+// ============================================================
+// CALENDAR
+// ============================================================
+
+function changeMonth(delta) {
+  currentMonth += delta;
+  if (currentMonth > 11) { currentMonth = 0; currentYear++; }
+  if (currentMonth < 0) { currentMonth = 11; currentYear--; }
+  renderCalendar();
+}
+
+function renderCalendar() {
+  const schedule = generateSchedule(state.startDate, 200);
+  const allItems = schedule.flatMap(w => w.items);
+
+  const monthNames = ['January','February','March','April','May','June','July','August','September','October','November','December'];
+  document.getElementById('cal-month-label').textContent = `${monthNames[currentMonth]} ${currentYear}`;
+
+  const firstDay = new Date(currentYear, currentMonth, 1).getDay();
+  const daysInMonth = new Date(currentYear, currentMonth + 1, 0).getDate();
+  const today = new Date();
+
+  let html = '';
+  ['Sun','Mon','Tue','Wed','Thu','Fri','Sat'].forEach(d => {
+    html += `<div class="cal-header">${d}</div>`;
+  });
+
+  for (let i = 0; i < firstDay; i++) {
+    html += '<div class="cal-day empty"></div>';
+  }
+
+  for (let d = 1; d <= daysInMonth; d++) {
+    const dateStr = `${currentYear}-${String(currentMonth+1).padStart(2,'0')}-${String(d).padStart(2,'0')}`;
+    const isToday = today.getFullYear() === currentYear && today.getMonth() === currentMonth && today.getDate() === d;
+    const dayItems = allItems.filter(item => item.date === dateStr);
+
+    html += `<div class="cal-day${isToday ? ' today' : ''}">`;
+    html += `<div class="cal-date">${d}</div>`;
+    dayItems.forEach(item => {
+      const published = isItemPublished(item);
+      html += `<div class="cal-post ${item.type}${published ? ' published' : ''}" title="${item.title}" onclick="openArticleModal('${item.title.replace(/'/g, "\\'")}', '${item.type}', ${item.presNum || 'null'}, ${item.topicIndex !== undefined ? item.topicIndex : -1}, '${item.date}')">${item.title}</div>`;
+    });
+    html += '</div>';
+  }
+
+  document.getElementById('calendar-grid').innerHTML = html;
+}
+
+function isItemPublished(item) {
+  if (item.isPres && state.publishedPres[item.presNum]) return state.publishedPres[item.presNum].pres;
+  if (item.isWife && state.publishedPres[item.presNum]) return state.publishedPres[item.presNum].wife;
+  if (item.type === 'daily') return state.publishedTopics[item.topicIndex];
+  return false;
+}
+
+// ============================================================
+// SCHEDULE
+// ============================================================
+
+function renderSchedule() {
+  const schedule = generateSchedule(state.startDate, 120);
+  let html = '';
+
+  const totalWeeks = Math.min(schedule.length, 120);
+  const startW = schedule[0];
+  const endW = schedule[totalWeeks - 1];
+  document.getElementById('schedule-range').textContent = `Showing ~${totalWeeks} weeks`;
+
+  schedule.slice(0, 120).forEach(week => {
+    html += `<div class="schedule-week">`;
+    html += `<div class="schedule-week-header">${formatWeekDisplay(week.weekStart)}</div>`;
+
+    week.items.forEach(item => {
+      const published = isItemPublished(item);
+      const checkId = `sched-${item.date}-${item.type}-${item.title.replace(/\s/g,'')}`;
+      html += `<div class="schedule-row${published ? ' done' : ''}">`;
+      html += `<input type="checkbox" ${published ? 'checked' : ''} onchange="toggleScheduleItem(this, '${item.type}', ${item.presNum || -1}, ${item.topicIndex !== undefined ? item.topicIndex : -1}, ${item.isWife || false}, ${item.isPres || false})">`;
+      html += `<span class="schedule-day">${item.day} ${formatDateDisplay(item.date)}</span>`;
+      html += `<span class="schedule-type ${item.type}">${item.type === 'friday' ? 'POTUS' : item.type === 'monday' ? 'FLOTUS' : 'Daily'}</span>`;
+      html += `<span class="schedule-title" style="cursor:pointer;text-decoration-color:var(--gold);" onclick="openArticleModal('${item.title.replace(/'/g, "\\'")}', '${item.type}', ${item.presNum || 'null'}, ${item.topicIndex !== undefined ? item.topicIndex : -1}, '${item.date}')">${item.title}</span>`;
+      html += `</div>`;
+    });
+
+    html += `</div>`;
+  });
+
+  document.getElementById('schedule-list').innerHTML = html;
+}
+
+function toggleScheduleItem(checkbox, type, presNum, topicIndex, isWife, isPres) {
+  if (isPres && presNum > 0) {
+    if (!state.publishedPres[presNum]) state.publishedPres[presNum] = {};
+    state.publishedPres[presNum].pres = checkbox.checked;
+  }
+  if (isWife && presNum > 0) {
+    if (!state.publishedPres[presNum]) state.publishedPres[presNum] = {};
+    state.publishedPres[presNum].wife = checkbox.checked;
+  }
+  if (type === 'daily' && topicIndex >= 0) {
+    state.publishedTopics[topicIndex] = checkbox.checked;
+  }
+  saveState();
+  updateStats();
+  checkbox.closest('.schedule-row').classList.toggle('done', checkbox.checked);
+}
+
+// ============================================================
+// PRESIDENTS GRID
+// ============================================================
+
+function renderPresidents() {
+  let html = '';
+
+  PRESIDENTS.filter(p => {
+    if (!presSearchQuery) return true;
+    const q = presSearchQuery.toLowerCase();
+    return p.name.toLowerCase().includes(q) ||
+           (p.wife && p.wife.toLowerCase().includes(q)) ||
+           p.presNote.toLowerCase().includes(q);
+  }).forEach(pres => {
+    const presPublished = state.publishedPres[pres.num]?.pres || false;
+    const wifePublished = state.publishedPres[pres.num]?.wife || false;
+    const bothDone = presPublished && wifePublished;
+
+    html += `<div class="pres-card${bothDone ? ' completed' : ''}">`;
+    html += `<div class="pres-card-header">`;
+    html += `<span class="pres-number">#${pres.num}</span>`;
+    html += `<span class="pres-name">${pres.name}</span>`;
+    html += `<span class="pres-years">${pres.years}</span>`;
+    html += `</div>`;
+    html += `<div class="pres-card-body">`;
+
+    // President row (Friday)
+    html += `<div class="pres-row">`;
+    html += `<input type="checkbox" ${presPublished ? 'checked' : ''} onchange="togglePres(${pres.num}, 'pres', this.checked)">`;
+    html += `<span class="pres-row-type friday">FRI</span>`;
+    html += `<span class="pres-row-title">${pres.name}</span>`;
+    html += `<button class="mark-used-btn" onclick="openArticleModal('${pres.name.replace(/'/g, "\\'")}', 'friday', ${pres.num}, -1, '')">✨ Write</button>`;
+    html += `</div>`;
+
+    // Wife row (Monday)
+    const wifeName = pres.wife || 'No spouse (bachelor president)';
+    html += `<div class="pres-row">`;
+    html += `<input type="checkbox" ${wifePublished ? 'checked' : ''} onchange="togglePres(${pres.num}, 'wife', this.checked)">`;
+    html += `<span class="pres-row-type monday">MON</span>`;
+    html += `<span class="pres-row-title">${wifeName}</span>`;
+    html += `<button class="mark-used-btn" onclick="openArticleModal('${(pres.wife || pres.name + ' Hostess').replace(/'/g, "\\'")}', 'monday', ${pres.num}, -1, '')">✨ Write</button>`;
+    html += `</div>`;
+
+    html += `</div>`;
+
+    // Notes
+    html += `<div class="pres-card-notes">`;
+    html += `<strong>President:</strong> ${pres.presNote}<br>`;
+    html += `<strong>${pres.wife ? 'Wife' : 'Hostess'}:</strong> ${pres.wifeNote}`;
+    html += `</div>`;
+
+    html += `</div>`;
+  });
+
+  document.getElementById('pres-grid').innerHTML = html;
+}
+
+function togglePres(num, type, checked) {
+  if (!state.publishedPres[num]) state.publishedPres[num] = {};
+  state.publishedPres[num][type] = checked;
+  saveState();
+  updateStats();
+  updateProgress();
+}
+
+function filterPresidents(query) {
+  presSearchQuery = query;
+  renderPresidents();
+}
+
+// ============================================================
+// DAILY TOPICS
+// ============================================================
+
+function renderTopics() {
+  const categories = [...new Set(DAILY_TOPICS.map(t => t.cat))];
+
+  // Render filters
+  let filterHtml = `<button class="filter-btn ${currentTopicFilter === 'all' ? 'active' : ''}" onclick="setTopicFilter('all')">All</button>`;
+  const catLabels = {
+    wars: 'Wars & Battles', founding: 'Founding Era', inventions: 'Inventions',
+    culture: 'Culture', 'civil-rights': 'Civil Rights', westward: 'Westward Expansion',
+    oddities: 'Oddities', disasters: 'Disasters', science: 'Science',
+    economy: 'Economy', crime: 'Crime & Scandals', sports: 'Sports',
+    holidays: 'Holidays', food: 'Food History'
+  };
+  categories.forEach(cat => {
+    filterHtml += `<button class="filter-btn ${currentTopicFilter === cat ? 'active' : ''}" onclick="setTopicFilter('${cat}')">${catLabels[cat] || cat}</button>`;
+  });
+  document.getElementById('topic-filters').innerHTML = filterHtml;
+
+  // Render topics
+  let html = '';
+  DAILY_TOPICS.forEach((topic, idx) => {
+    if (currentTopicFilter !== 'all' && topic.cat !== currentTopicFilter) return;
+    if (topicSearchQuery && !topic.title.toLowerCase().includes(topicSearchQuery.toLowerCase()) && !topic.desc.toLowerCase().includes(topicSearchQuery.toLowerCase())) return;
+
+    const used = state.usedTopics[idx];
+    html += `<div class="topic-card${used ? ' used' : ''}">`;
+    html += `<span class="topic-category cat-${topic.cat}">${catLabels[topic.cat] || topic.cat}</span>`;
+    html += `<div class="topic-title">${topic.title}</div>`;
+    html += `<div class="topic-desc">${topic.desc}</div>`;
+    html += `<div class="topic-card-footer">`;
+    html += `<button class="mark-used-btn" onclick="toggleTopicUsed(${idx}, this)">${used ? 'Mark Unused' : 'Mark Used'}</button>`;
+    html += `<button class="mark-used-btn" onclick="openArticleModal('${topic.title.replace(/'/g, "\\'")}', 'daily', null, ${idx}, '')">✨ Write</button>`;
+    html += `</div>`;
+    html += `</div>`;
+  });
+
+  document.getElementById('topics-grid').innerHTML = html;
+}
+
+function setTopicFilter(cat) {
+  currentTopicFilter = cat;
+  renderTopics();
+}
+
+function filterTopics(query) {
+  topicSearchQuery = query;
+  renderTopics();
+}
+
+function toggleTopicUsed(idx, btn) {
+  state.usedTopics[idx] = !state.usedTopics[idx];
+  saveState();
+  renderTopics();
+  updateStats();
+}
+
+// ============================================================
+// CUSTOM TOPICS
+// ============================================================
+
+function addCustomTopic() {
+  const title = document.getElementById('custom-topic').value.trim();
+  const date = document.getElementById('custom-date').value;
+  const cat = document.getElementById('custom-cat').value;
+  if (!title) return;
+
+  DAILY_TOPICS.push({ title, desc: 'Custom topic', cat });
+  document.getElementById('custom-topic').value = '';
+  updateStats();
+}
+
+// ============================================================
+// STATS & PROGRESS
+// ============================================================
+
+function updateStats() {
+  let published = 0;
+  Object.values(state.publishedPres).forEach(p => {
+    if (p.pres) published++;
+    if (p.wife) published++;
+  });
+  Object.values(state.publishedTopics).forEach(v => { if (v) published++; });
+
+  const upcoming = (PRESIDENTS.length * 2) + DAILY_TOPICS.length - published;
+
+  document.getElementById('stat-published').textContent = published;
+  document.getElementById('stat-upcoming').textContent = upcoming;
+  document.getElementById('stat-topics').textContent = DAILY_TOPICS.length;
+}
+
+function updateProgress() {
+  let done = 0;
+  PRESIDENTS.forEach(p => {
+    if (state.publishedPres[p.num]?.pres) done++;
+    if (state.publishedPres[p.num]?.wife) done++;
+  });
+  const total = PRESIDENTS.length * 2;
+  const pct = Math.round((done / total) * 100);
+  document.getElementById('pres-progress').style.width = pct + '%';
+  document.getElementById('pres-progress-text').textContent = `${done} / ${total}`;
+}
+
+// ============================================================
+// ARTICLE MODAL & AI GENERATION
+// ============================================================
+
+let currentModalItem = null;
+let currentTone = 'conversational';
+let currentArticleText = '';
+let dotsInterval = null;
+
+function openArticleModal(title, type, presNum, topicIndex, date) {
+  currentModalItem = { title, type, presNum, topicIndex, date };
+
+  // Set badge
+  const badge = document.getElementById('modal-badge');
+  badge.className = 'modal-type-badge ' + type;
+  badge.textContent = type === 'friday' ? 'PRESIDENT' : type === 'monday' ? 'FIRST LADY' : 'DAILY';
+
+  // Set title
+  document.getElementById('modal-title').textContent = title;
+
+  // Set meta
+  document.getElementById('modal-meta').textContent = `Scheduled for ${date || 'TBD'}`;
+
+  // Set notes
+  let notesHtml = '';
+  if (type === 'friday' && presNum) {
+    const pres = PRESIDENTS.find(p => p.num === presNum);
+    if (pres) {
+      notesHtml = `<strong>Writing notes:</strong> ${pres.presNote}<br><strong>Years:</strong> ${pres.years}`;
+    }
+  } else if (type === 'monday' && presNum) {
+    const pres = PRESIDENTS.find(p => p.num === presNum);
+    if (pres) {
+      notesHtml = `<strong>Writing notes:</strong> ${pres.wifeNote}<br><strong>President:</strong> ${pres.name} (${pres.years})`;
+    }
+  } else if (type === 'daily' && topicIndex !== undefined && topicIndex >= 0) {
+    const topic = DAILY_TOPICS[topicIndex];
+    if (topic) {
+      notesHtml = `<strong>Angle:</strong> ${topic.desc}`;
+    }
+  }
+  document.getElementById('modal-notes').innerHTML = notesHtml || '<em>No notes available</em>';
+
+  // Reset state
+  document.getElementById('article-output').classList.remove('visible');
+  document.getElementById('article-output').innerHTML = '';
+  document.getElementById('generating').classList.remove('visible');
+  document.getElementById('btn-copy').style.display = 'none';
+  document.getElementById('btn-regen').style.display = 'none';
+  document.getElementById('btn-generate').style.display = '';
+  document.getElementById('btn-generate').disabled = false;
+  currentArticleText = '';
+
+  // Reset tone
+  currentTone = 'conversational';
+  document.querySelectorAll('.tone-btn').forEach(b => b.classList.remove('active'));
+  document.querySelector('.tone-btn').classList.add('active');
+
+  // Open
+  document.getElementById('article-modal').classList.add('open');
+  document.body.style.overflow = 'hidden';
+}
+
+function closeModal() {
+  document.getElementById('article-modal').classList.remove('open');
+  document.body.style.overflow = '';
+  if (dotsInterval) clearInterval(dotsInterval);
+}
+
+function setTone(tone, btn) {
+  currentTone = tone;
+  document.querySelectorAll('.tone-btn').forEach(b => b.classList.remove('active'));
+  btn.classList.add('active');
+}
+
+function buildPrompt() {
+  const item = currentModalItem;
+  if (!item) return '';
+
+  const toneDescriptions = {
+    'conversational': 'Write in a conversational, witty, and engaging tone. Like you are telling a friend at a bar about this topic. Approachable, fun, and informative. Use short paragraphs.',
+    'storytelling': 'Write in a narrative storytelling style. Open with a compelling scene or moment. Draw the reader in with vivid details and a story arc. Make history feel like a novel.',
+    'listicle': 'Write in a listicle format with numbered sections and catchy subheadings. Each section should be a bite-sized chunk of interesting information. Easy to skim but still substantive.',
+    'deep-dive': 'Write a thorough, well-researched deep dive. Include context, causes, effects, and legacy. Still keep it readable and interesting, but go deeper than a surface-level overview.'
+  };
+
+  const toneInstruction = toneDescriptions[currentTone];
+  const noDashes = 'IMPORTANT: Never use em-dashes (the long dash) anywhere in the article. Use commas, periods, semicolons, or parentheses instead. Also do not use the word "delve" or the phrase "it\'s worth noting."';
+
+  if (item.type === 'friday') {
+    const pres = PRESIDENTS.find(p => p.num === item.presNum);
+    return `Write a Substack article about President ${item.title}, the ${ordinal(pres.num)} President of the United States (${pres.years}).
+
+${toneInstruction}
+
+Writing notes/angle to incorporate: ${pres.presNote}
+
+This is a LONGER featured article (800-1200 words) for a history Substack. Include:
+- An engaging opening hook
+- Key events and decisions of their presidency
+- Interesting personal anecdotes and personality traits
+- Their legacy and how they're remembered
+- A strong closing thought
+
+Format the article with a compelling title at the top (prefixed with #), use ## for section headers if needed. Write in markdown format suitable for Substack.
+
+${noDashes}`;
+  }
+
+  if (item.type === 'monday') {
+    const pres = PRESIDENTS.find(p => p.num === item.presNum);
+    const wifeName = pres.wife || item.title;
+    return `Write a Substack article about ${wifeName}, the wife/First Lady of President ${pres.name} (${pres.years}).
+
+${toneInstruction}
+
+Writing notes/angle to incorporate: ${pres.wifeNote}
+
+This is a LONGER featured article (800-1200 words) for a history Substack. Include:
+- An engaging opening hook
+- Her background and life before the White House
+- Her role as First Lady and any causes she championed
+- Interesting personal stories and personality traits
+- Her legacy and influence
+- A strong closing thought
+
+${wifeName === pres.wife ? '' : 'Note: This president did not have a wife serving as First Lady. Write about whoever served as hostess and the circumstances.'}
+
+Format the article with a compelling title at the top (prefixed with #), use ## for section headers if needed. Write in markdown format suitable for Substack.
+
+${noDashes}`;
+  }
+
+  if (item.type === 'daily') {
+    const topic = DAILY_TOPICS[item.topicIndex];
+    return `Write a shorter Substack article about: ${item.title}
+
+Context/angle: ${topic ? topic.desc : 'General American history topic'}
+
+${toneInstruction}
+
+This is a SHORTER daily article (400-600 words) for a history Substack. Keep it punchy and interesting. Include:
+- A hook that grabs attention
+- The key facts and story
+- At least one surprising or lesser-known detail
+- A brief, satisfying conclusion
+
+Format the article with a compelling title at the top (prefixed with #). Write in markdown format suitable for Substack. Keep paragraphs short.
+
+${noDashes}`;
+  }
+
+  return '';
+}
+
+function ordinal(n) {
+  const s = ['th','st','nd','rd'];
+  const v = n % 100;
+  return n + (s[(v-20)%10] || s[v] || s[0]);
+}
+
+async function generateArticle() {
+  const prompt = buildPrompt();
+  if (!prompt) return;
+
+  // UI: show loading
+  document.getElementById('btn-generate').disabled = true;
+  document.getElementById('btn-generate').textContent = '⏳ Generating...';
+  document.getElementById('btn-copy').style.display = 'none';
+  document.getElementById('btn-regen').style.display = 'none';
+  document.getElementById('article-output').classList.remove('visible');
+  document.getElementById('generating').classList.add('visible');
+
+  // Animate dots
+  let dotCount = 0;
+  const dotsEl = document.getElementById('loading-dots');
+  if (dotsInterval) clearInterval(dotsInterval);
+  dotsInterval = setInterval(() => {
+    dotCount = (dotCount + 1) % 4;
+    dotsEl.textContent = '.'.repeat(dotCount + 1);
+  }, 500);
+
+  try {
+    // Detect environment: if running on Netlify, use the serverless function
+    // If running inside Claude's interface, use the direct API
+    const isNetlify = window.location.hostname.includes('netlify.app') ||
+                      window.location.hostname.includes('himynameisally.net') ||
+                      window.location.hostname.includes('.netlify.');
+    
+    let articleText = '';
+
+    if (isNetlify) {
+      // Use Netlify Function proxy
+      const response = await fetch('/.netlify/functions/generate-article', {
+        method: 'POST',
+        headers: { 'Content-Type': 'application/json' },
+        body: JSON.stringify({ prompt, tone: currentTone })
+      });
+      const data = await response.json();
+      if (data.error) throw new Error(data.error);
+      articleText = data.article;
+    } else {
+      // Direct Anthropic API (works inside Claude's chat interface)
+      const response = await fetch('https://api.anthropic.com/v1/messages', {
+        method: 'POST',
+        headers: { 'Content-Type': 'application/json' },
+        body: JSON.stringify({
+          model: 'claude-sonnet-4-6',
+          max_tokens: 4000,
+          messages: [
+            { role: 'user', content: prompt }
+          ]
+        })
+      });
+      const data = await response.json();
+      if (data.content && data.content.length > 0) {
+        articleText = data.content
+          .filter(block => block.type === 'text')
+          .map(block => block.text)
+          .join('\n');
+      }
+    }
+
+    if (articleText) {
+      currentArticleText = articleText;
+
+      // Render markdown-ish content as HTML
+      const rendered = renderMarkdown(currentArticleText);
+      document.getElementById('article-output').innerHTML = rendered;
+      document.getElementById('article-output').classList.add('visible');
+      document.getElementById('btn-copy').style.display = '';
+      document.getElementById('btn-regen').style.display = '';
+    } else {
+      document.getElementById('article-output').innerHTML = '<p style="color:#c62828;">Something went wrong generating the article. Try again!</p>';
+      document.getElementById('article-output').classList.add('visible');
+    }
+  } catch (err) {
+    console.error('API Error:', err);
+    document.getElementById('article-output').innerHTML = '<p style="color:#c62828;">Error connecting to AI. Make sure you\'re viewing this in Claude\'s interface, or check your connection.</p>';
+    document.getElementById('article-output').classList.add('visible');
+  }
+
+  // Reset UI
+  clearInterval(dotsInterval);
+  document.getElementById('generating').classList.remove('visible');
+  document.getElementById('btn-generate').disabled = false;
+  document.getElementById('btn-generate').style.display = 'none';
+}
+
+function renderMarkdown(text) {
+  return text
+    .replace(/^### (.+)$/gm, '<h3>$1</h3>')
+    .replace(/^## (.+)$/gm, '<h2>$1</h2>')
+    .replace(/^# (.+)$/gm, '<h1>$1</h1>')
+    .replace(/\*\*(.+?)\*\*/g, '<strong>$1</strong>')
+    .replace(/\*(.+?)\*/g, '<em>$1</em>')
+    .replace(/^---$/gm, '<hr>')
+    .replace(/\n\n/g, '</p><p>')
+    .replace(/\n/g, '<br>')
+    .replace(/^/, '<p>')
+    .replace(/$/, '</p>');
+}
+
+async function copyArticle() {
+  if (!currentArticleText) return;
+  try {
+    await navigator.clipboard.writeText(currentArticleText);
+    const btn = document.getElementById('btn-copy');
+    btn.classList.add('copied');
+    btn.innerHTML = '✅ Copied!';
+    setTimeout(() => {
+      btn.classList.remove('copied');
+      btn.innerHTML = '📋 Copy Article';
+    }, 2000);
+  } catch(e) {
+    // Fallback
+    const ta = document.createElement('textarea');
+    ta.value = currentArticleText;
+    document.body.appendChild(ta);
+    ta.select();
+    document.execCommand('copy');
+    document.body.removeChild(ta);
+    const btn = document.getElementById('btn-copy');
+    btn.innerHTML = '✅ Copied!';
+    setTimeout(() => { btn.innerHTML = '📋 Copy Article'; }, 2000);
+  }
+}
+
+// ============================================================
+// INIT
+// ============================================================
+
+function init() {
+  updateStats();
+  updateProgress();
+  renderCalendar();
+}
+
+init();
+</script>
+</body>
+</html>
